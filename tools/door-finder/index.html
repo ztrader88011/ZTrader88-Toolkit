@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Door-Finder — Locked Out? Find Your Door | ztrader88</title>
+<meta name="description" content="Locked out of Facebook, Instagram, Google, Apple or Microsoft? Pick your service and your problem — this free tool points you to the one official door and the steps, in plain English.">
+<style>
+  :root{
+    --navy:#0b1e3a; --navy2:#12294d; --gold:#d4af37; --gold-soft:#f3e3ac;
+    --paper:#fdfaf2; --ink:#1c2430; --muted:#5a6572; --warn-bg:#fdf3e3; --warn-line:#d4af37;
+    --ok:#1d6b4f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{font-size:19px;}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.55;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
+  }
+  /* Highly transparent avatar watermark — brand presence, never in the way */
+  .watermark{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .watermark span{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:78vmin; line-height:1; color:var(--navy); opacity:.045;
+    transform:rotate(-12deg); user-select:none;
+  }
+  .wrap{position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 18px 40px;}
+  header{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff; padding:30px 18px 26px; text-align:center; position:relative; z-index:1;
+    border-bottom:4px solid var(--gold);
+  }
+  .brand{
+    font-size:.78rem; letter-spacing:.32em; text-transform:uppercase; color:var(--gold);
+    font-weight:700;
+  }
+  header h1{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:2.15rem; line-height:1.15; margin:10px 0 8px;
+  }
+  header p{color:#dbe4f0; font-size:1.02rem; max-width:520px; margin:0 auto;}
+  .warn{
+    background:var(--warn-bg); border:2px solid var(--warn-line); border-radius:12px;
+    padding:16px 18px; margin:22px 0 6px;
+  }
+  .warn h2{font-family:Georgia,serif; font-size:1.12rem; margin-bottom:6px; color:var(--navy);}
+  .warn p{margin-bottom:6px;}
+  .warn p:last-child{margin-bottom:0;}
+  .step-label{
+    margin:26px 0 10px; font-size:.8rem; font-weight:700; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .step-label .n{color:var(--gold); }
+  h2.q{font-family:Georgia,serif; font-size:1.45rem; color:var(--navy); margin-bottom:14px;}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:520px){ .grid{grid-template-columns:1fr;} }
+  button.choice{
+    appearance:none; border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:14px; padding:18px 16px; font-size:1.08rem; font-weight:700;
+    cursor:pointer; text-align:left; min-height:64px; width:100%;
+    transition:background .15s, color .15s, transform .05s;
+  }
+  button.choice small{display:block; font-weight:400; font-size:.86rem; color:var(--muted); margin-top:3px;}
+  button.choice:hover{background:var(--gold-soft);}
+  button.choice:active{transform:scale(.99);}
+  button.choice.selected{background:var(--navy); color:#fff;}
+  button.choice.selected small{color:#cdd8e8;}
+  .hidden{display:none !important;}
+  .result{
+    background:#fff; border:2px solid var(--navy); border-radius:16px;
+    padding:22px 20px; margin-top:6px; box-shadow:0 6px 24px rgba(11,30,58,.08);
+  }
+  .result h3{font-family:Georgia,serif; font-size:1.3rem; color:var(--navy); margin-bottom:4px;}
+  .result .sub{color:var(--muted); font-size:.95rem; margin-bottom:14px;}
+  a.door{
+    display:block; text-align:center; background:var(--gold); color:var(--navy);
+    font-weight:800; font-size:1.12rem; text-decoration:none;
+    border-radius:12px; padding:16px 14px; margin:12px 0 4px; border:2px solid var(--navy);
+    word-break:break-all;
+  }
+  a.door:hover{background:var(--gold-soft);}
+  .door-note{text-align:center; font-size:.86rem; color:var(--muted); margin-bottom:14px;}
+  ol.steps{margin:6px 0 6px 22px;}
+  ol.steps li{margin-bottom:9px;}
+  .note{
+    background:#eef4ee; border-left:5px solid var(--ok); border-radius:8px;
+    padding:12px 14px; margin-top:14px; font-size:.97rem;
+  }
+  .note strong{color:var(--ok);}
+  .caution{
+    background:var(--warn-bg); border-left:5px solid var(--warn-line); border-radius:8px;
+    padding:12px 14px; margin-top:14px; font-size:.97rem;
+  }
+  .actions{margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;}
+  button.util{
+    appearance:none; border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:10px; padding:11px 16px; font-size:.95rem; font-weight:700; cursor:pointer;
+  }
+  button.util:hover{background:var(--gold-soft);}
+  section.more{margin-top:34px;}
+  section.more h2{font-family:Georgia,serif; font-size:1.35rem; color:var(--navy); margin-bottom:10px;}
+  section.more p{margin-bottom:10px;}
+  .links{list-style:none; margin-top:8px;}
+  .links li{margin-bottom:10px;}
+  .links a{color:var(--navy); font-weight:700;}
+  footer{
+    margin-top:40px; border-top:2px solid var(--gold); padding-top:18px;
+    text-align:center; color:var(--muted); font-size:.92rem;
+  }
+  footer .pointers{margin-bottom:12px; font-size:1rem;}
+  footer .pointers a{color:var(--navy); font-weight:700; text-decoration:none; margin:0 8px; white-space:nowrap;}
+  footer .pointers a:hover{text-decoration:underline;}
+  footer .freenote{
+    background:#fff; border:1px solid #e4ddc8; border-radius:12px; padding:14px 16px;
+    color:var(--ink); max-width:560px; margin:0 auto 12px;
+  }
+  @media print{
+    .watermark, .actions, button.choice{display:none !important;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<div class="watermark" aria-hidden="true"><span>Z</span></div>
+
+<header>
+  <div class="brand">ztrader88</div>
+  <h1>The Door-Finder</h1>
+  <p>Locked out of an account? There is no one to call — but there <em>is</em> a right door. Pick your service, pick your problem, and this tool walks you to it.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="warn" role="note">
+    <h2>⚠ Read this first — it protects you</h2>
+    <p><strong>There is no support phone number.</strong> Facebook, Instagram and Google do not offer a customer-service phone number for ordinary users. Any “support number” in an ad, a comment, or a search result is a scam.</p>
+    <p><strong>Recovery is always free.</strong> Anyone offering to unlock your account for a fee is running a scam. The real way back costs nothing — and it only ever happens on the companies’ own pages, like the doors below.</p>
+  </div>
+
+  <p class="step-label"><span class="n">Step 1</span> of 2</p>
+  <h2 class="q">Which account are you locked out of?</h2>
+  <div class="grid" id="services"></div>
+
+  <div id="problemBlock" class="hidden">
+    <p class="step-label"><span class="n">Step 2</span> of 2</p>
+    <h2 class="q" id="problemTitle">What happened?</h2>
+    <div class="grid" id="problems"></div>
+  </div>
+
+  <div id="result" class="hidden"></div>
+
+  <section class="more">
+    <h2>Before it happens again</h2>
+    <p>Turn on <strong>two-factor authentication</strong> — the setting that asks for a code from your phone as well as your password when you sign in. It takes a few minutes. In 2026, when one of Meta’s own rescue tools was turned against its users and thousands of Instagram accounts were taken over, <strong>the accounts with two-factor authentication turned on held</strong>.</p>
+    <p>Do it on your <strong>email account first</strong>: email is the master key to everything else, because every “forgot password” reset lands there.</p>
+    <ul class="links">
+      <li>🎬 <a href="https://youtu.be/RzKPanoDLEM" target="_blank" rel="noopener">Watch: How to Recover a Disabled Facebook Account (When There’s No One to Call)</a></li>
+      <li>🎬 <a href="https://youtu.be/qfqsNCOuXsY" target="_blank" rel="noopener">Watch: Locked Out — And There’s No One to Call</a></li>
+      <li>🎬 <a href="https://youtu.be/xAvz5xY0hqU" target="_blank" rel="noopener">Watch: Passkeys, explained simply — the lock stronger than a password</a></li>
+      <li>📄 <a href="https://gist.github.com/ztrader88011/c515828065a773ff1da85a6cc2e070a8" target="_blank" rel="noopener">Read: Locked Out — The Official Way Back In, for Every Account</a> (the printable written guide)</li>
+    </ul>
+  </section>
+
+  <footer>
+    <div class="pointers">
+      <a href="https://www.youtube.com/@ztrader880" target="_blank" rel="noopener">▶ YouTube — @ztrader880</a>
+      <a href="https://gist.github.com/ztrader88011/c515828065a773ff1da85a6cc2e070a8" target="_blank" rel="noopener">📄 Our free guides</a>
+      <span>📘 Facebook — search <strong>ztrader88</strong></span>
+    </div>
+    <div class="freenote">
+      These tools are free — no catch. If one helped you, the best way to support us costs nothing: like, share, and subscribe, on whichever platform you found us. That’s what keeps the lessons coming.
+    </div>
+    <p>ztrader88 — tech news and safety lessons in plain English. No jargon, no hype.<br>
+    Doors and steps checked against the companies’ own pages, November 2026. This tool collects nothing — no account, no data, ever.</p>
+  </footer>
+
+</div>
+
+<script>
+var DATA = {
+  facebook: {
+    name: "Facebook",
+    problems: {
+      forgot: {
+        label: "I forgot my password",
+        sub: "…or I lost access to my email or phone",
+        title: "Your door: “Find your account”",
+        sub2: "Use this door when the password is gone, or the email or phone on the account no longer works.",
+        doorText: "facebook.com/login/identify",
+        doorUrl: "https://www.facebook.com/login/identify",
+        steps: [
+          "Tap the gold button above — it opens Facebook’s own “find your account” page.",
+          "Type the email address or phone number on your account and follow the steps to reset your password.",
+          "If the email or phone it offers you is dead, use the “No longer have access to these?” link on that page — it routes around the dead address.",
+          "Facebook may ask you to prove it’s really you with a government ID or a video selfie. That is normal, and it happens inside Facebook’s own flow — never send it to anyone else."
+        ],
+        note: "<strong>Good to know:</strong> Meta added a support hub inside the Facebook app (December 2025) — but it lives inside the app, so if you’re fully locked out, the web door above is where you start."
+      },
+      hacked: {
+        label: "Someone got into my account",
+        sub: "…and changed my details",
+        title: "Your door: the compromised-account door",
+        sub2: "Use this door when a stranger got in and the contact details on the account may now be theirs, not yours.",
+        doorText: "facebook.com/hacked",
+        doorUrl: "https://www.facebook.com/hacked",
+        steps: [
+          "Tap the gold button above — it opens Facebook’s own page for accounts that have been broken into.",
+          "Follow the steps to secure the account and take control back.",
+          "Facebook may ask you to prove it’s really you with a government ID or a video selfie. That is normal, inside Facebook’s own flow.",
+          "Once you’re back in, change the password and turn on two-factor authentication straight away — see “Before it happens again” below."
+        ]
+      },
+      disabled: {
+        label: "My account was suspended or disabled",
+        sub: "Facebook shut it, or says I broke a rule",
+        title: "Your door: the appeal shown at login",
+        sub2: "There is no separate appeal website. The appeal path is the one Facebook shows you when you try to log in.",
+        doorText: "facebook.com — log in to see your appeal",
+        doorUrl: "https://www.facebook.com/",
+        steps: [
+          "Try to log in as normal. If the account is suspended or disabled, Facebook shows you the appeal path right there — follow exactly what it shows.",
+          "Appeal windows exist, and they expire — don’t sit on it. Start the same day you find out.",
+          "If Facebook asks for a government ID as part of the appeal, that happens inside Facebook’s own flow only."
+        ],
+        caution: "<strong>Ignore old guides about “Trusted Contacts.”</strong> Facebook discontinued Trusted Contacts in 2022. It no longer exists, no matter how many websites still recommend it."
+      }
+    }
+  },
+  instagram: {
+    name: "Instagram",
+    problems: {
+      hub: {
+        label: "I’m locked out — any reason",
+        sub: "Hacked, forgotten password, or lost email/phone",
+        title: "Your door: Instagram’s recovery hub",
+        sub2: "One official hub covers a hacked account, a forgotten password, and losing access to your email or phone.",
+        doorText: "instagram.com/hacked",
+        doorUrl: "https://www.instagram.com/hacked",
+        steps: [
+          "Tap the gold button above — it opens Instagram’s own recovery hub.",
+          "Pick the choice that matches your situation and follow the steps. The flow sends you a login link or a security code.",
+          "The identity check can be a video selfie — that is normal, inside Instagram’s own flow.",
+          "Once you’re back in, change the password and turn on two-factor authentication straight away."
+        ],
+        note: "<strong>The email that can save you:</strong> if someone changes the email address on your Instagram account, Instagram emails your <em>previous</em> address from <strong>security@mail.instagram.com</strong> with a way to reverse the change. If you get one of those and it wasn’t you, act on it straight away."
+      }
+    }
+  },
+  google: {
+    name: "Google / Gmail",
+    problems: {
+      forgot: {
+        label: "I forgot my password",
+        sub: "…or I can’t get my sign-in codes",
+        title: "Your door: Google Account Recovery",
+        sub2: "Google publishes its own recovery rules. The short version is below the door.",
+        doorText: "accounts.google.com/signin/recovery",
+        doorUrl: "https://accounts.google.com/signin/recovery",
+        steps: [
+          "Use a device, browser and place you usually sign in from — Google grades your attempt partly on whether it looks like you.",
+          "Answer as many questions as you can. Skipping questions hurts your chances.",
+          "If it asks for the last password you remember, enter the most recent one you can recall — not the oldest.",
+          "Enter an email address that is connected to the account, and check your spam folder for Google’s reply."
+        ],
+        caution: "<strong>Google never asks for your password or sign-in codes</strong> by email, phone, or message. Only ever type them at accounts.google.com. In Google’s own words: you can’t call Google for help signing in, and Google doesn’t work with any service that claims to provide account or password support."
+      },
+      taken: {
+        label: "Someone else is using my account",
+        sub: "I think a stranger got in",
+        title: "Your door: Google Account Recovery",
+        sub2: "The same official recovery door handles a taken-over account. Act as soon as you can.",
+        doorText: "accounts.google.com/signin/recovery",
+        doorUrl: "https://accounts.google.com/signin/recovery",
+        steps: [
+          "Go through the recovery door above and follow the steps to get the account back and reset the password.",
+          "Use a device, browser and place you usually sign in from, and answer as many questions as you can.",
+          "Once you’re back in, change the password everywhere you reused it, and turn on two-step verification — Google’s version of two-factor authentication."
+        ],
+        caution: "<strong>Google never asks for your password or sign-in codes</strong> by email, phone, or message. Only ever type them at accounts.google.com."
+      }
+    }
+  },
+  apple: {
+    name: "Apple",
+    problems: {
+      forgot: {
+        label: "I forgot my password / I’m locked out",
+        sub: "Apple Account (Apple ID)",
+        title: "Your door: Apple’s password-reset page",
+        sub2: "One official door. How fast it goes depends on what you still have in your hand.",
+        doorText: "iforgot.apple.com",
+        doorUrl: "https://iforgot.apple.com",
+        steps: [
+          "Fastest of all: if you have a trusted device — an iPhone, iPad or Mac already signed in to your account — reset the password right on that device when prompted.",
+          "No trusted device handy? Start at the gold button above and follow Apple’s steps.",
+          "If Apple puts your account into account recovery, be ready for a wait of days or more while Apple confirms it’s you. That wait is normal — it is not a sign you did anything wrong.",
+          "While you wait, do not pay anyone who promises to speed it up. They can’t."
+        ]
+      }
+    }
+  },
+  microsoft: {
+    name: "Microsoft",
+    problems: {
+      forgot: {
+        label: "I forgot my password / I’m locked out",
+        sub: "Outlook, Hotmail, Xbox, Windows sign-in",
+        title: "Your door: Microsoft’s account recovery form",
+        sub2: "Use the recovery form when the normal password reset can’t verify you.",
+        doorText: "account.live.com/acsr",
+        doorUrl: "https://account.live.com/acsr",
+        steps: [
+          "Fill in the recovery form at the gold button above, as completely as you can.",
+          "Fill it in from a device and a place you’ve signed in from before — Microsoft’s checks partly grade whether it looks like you.",
+          "Give Microsoft an email address where it can reach you with the result."
+        ],
+        caution: "<strong>No human can override this.</strong> Microsoft’s support agents cannot unlock your account or overrule the recovery form — so anyone claiming they can do it for a fee is running a scam."
+      }
+    }
+  }
+};
+
+var currentService = null;
+
+function el(id){ return document.getElementById(id); }
+
+function renderServices(){
+  var box = el('services'); box.innerHTML = '';
+  Object.keys(DATA).forEach(function(key){
+    var b = document.createElement('button');
+    b.className = 'choice' + (currentService === key ? ' selected' : '');
+    b.textContent = DATA[key].name;
+    b.onclick = function(){ pickService(key); };
+    box.appendChild(b);
+  });
+}
+
+function pickService(key){
+  currentService = key;
+  renderServices();
+  var probs = DATA[key].problems;
+  var keys = Object.keys(probs);
+  var block = el('problemBlock');
+  if(keys.length === 1){
+    block.classList.add('hidden');
+    showResult(key, keys[0]);
+    return;
+  }
+  block.classList.remove('hidden');
+  el('result').classList.add('hidden');
+  var box = el('problems'); box.innerHTML = '';
+  keys.forEach(function(pk){
+    var p = probs[pk];
+    var b = document.createElement('button');
+    b.className = 'choice';
+    b.innerHTML = '';
+    var t = document.createElement('span'); t.textContent = p.label; b.appendChild(t);
+    if(p.sub){ var s = document.createElement('small'); s.textContent = p.sub; b.appendChild(s); }
+    b.onclick = function(){
+      Array.prototype.forEach.call(box.children, function(c){ c.classList.remove('selected'); });
+      b.classList.add('selected');
+      showResult(key, pk);
+    };
+    box.appendChild(b);
+  });
+  block.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function showResult(skey, pkey){
+  var p = DATA[skey].problems[pkey];
+  var r = el('result');
+  var html = '<h3>' + p.title + '</h3><p class="sub">' + p.sub2 + '</p>';
+  html += '<a class="door" href="' + p.doorUrl + '" target="_blank" rel="noopener">' + p.doorText + '</a>';
+  html += '<p class="door-note">Tap to open the official page — it opens in a new tab, and this page stays here.</p>';
+  html += '<ol class="steps">';
+  p.steps.forEach(function(s){ html += '<li>' + s + '</li>'; });
+  html += '</ol>';
+  if(p.note){ html += '<div class="note">' + p.note + '</div>'; }
+  if(p.caution){ html += '<div class="caution">' + p.caution + '</div>'; }
+  html += '<div class="actions"><button class="util" onclick="window.print()">🖨 Print these steps</button>' +
+          '<button class="util" onclick="startOver()">↺ Start over</button></div>';
+  r.innerHTML = html;
+  r.classList.remove('hidden');
+  r.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function startOver(){
+  currentService = null;
+  renderServices();
+  el('problemBlock').classList.add('hidden');
+  el('result').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+renderServices();
+</script>
+</body>
+</html>
