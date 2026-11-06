@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Secure Toolkit — What You Need to Know | ztrader88</title>
+<meta name="description" content="A short, plain-English checkup: how secure is the way you sign in to your email today — and what would make it stronger? Free from ztrader88. No personal information required.">
+<style>
+  :root{
+    --navy:#0b1e3a; --navy2:#12294d; --gold:#d4af37; --gold-soft:#f3e3ac;
+    --paper:#fdfaf2; --ink:#1c2430; --muted:#5a6572; --warn-bg:#fdf3e3; --warn-line:#d4af37;
+    --ok:#1d6b4f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{font-size:19px;}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.55;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
+  }
+  /* Highly transparent avatar watermark — brand presence, never in the way */
+  .watermark{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .watermark span{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:78vmin; line-height:1; color:var(--navy); opacity:.045;
+    transform:rotate(-12deg); user-select:none;
+  }
+  .wrap{position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 18px 40px;}
+  header{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff; padding:30px 18px 26px; text-align:center; position:relative; z-index:1;
+    border-bottom:4px solid var(--gold);
+  }
+  .brand{
+    font-size:.78rem; letter-spacing:.32em; text-transform:uppercase; color:var(--gold);
+    font-weight:700;
+  }
+  header h1{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:2.15rem; line-height:1.15; margin:10px 0 8px;
+  }
+  header p{color:#dbe4f0; font-size:1.02rem; max-width:520px; margin:0 auto;}
+  header p.nodata{color:var(--gold-soft); font-size:.93rem; margin:12px auto 0;}
+  .step-label{
+    margin:26px 0 10px; font-size:.8rem; font-weight:700; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .step-label .n{color:#a8851e;}
+  h2.q{font-family:Georgia,serif; font-size:1.45rem; color:var(--navy); margin-bottom:10px;}
+  p.hook{
+    font-family:Georgia,serif; font-size:1.5rem; line-height:1.3; color:var(--navy);
+    border-left:6px solid var(--gold); padding:6px 0 6px 16px; margin:4px 0 20px;
+  }
+  p.hook strong{color:#8c2f2f;}
+  p.lede{margin-bottom:14px;}
+  select.pick{
+    width:100%; min-height:64px; border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:14px; padding:16px 14px; font-size:1.08rem; font-weight:700;
+    cursor:pointer; font-family:inherit;
+  }
+  select.pick:focus{outline:3px solid var(--gold-soft); border-color:var(--gold);}
+  select.pick:hover{background:var(--gold-soft);}
+  .hidden{display:none !important;}
+  .result{
+    background:#fff; border:2px solid var(--navy); border-radius:16px;
+    padding:22px 20px; margin-top:18px; box-shadow:0 6px 24px rgba(11,30,58,.08);
+  }
+  .result h3{font-family:Georgia,serif; font-size:1.3rem; color:var(--navy); margin-bottom:8px;}
+  .result p{margin-bottom:10px;}
+  .result p:last-of-type{margin-bottom:0;}
+  /* Security meter — 7 graded steps, red through gold to deep green */
+  .meter{margin:6px 0 4px;}
+  .meter .segs{display:flex; gap:4px;}
+  .meter .seg{flex:1; height:22px; border-radius:6px; background:#e9e2cf; border:1px solid #d8d0b4;}
+  .meter .seg.f1{background:#c0392b; border-color:#c0392b;}
+  .meter .seg.f2{background:#d35400; border-color:#d35400;}
+  .meter .seg.f3{background:#e67e22; border-color:#e67e22;}
+  .meter .seg.f4{background:var(--gold); border-color:var(--gold);}
+  .meter .seg.f5{background:#7fb069; border-color:#7fb069;}
+  .meter .seg.f6{background:#2e8b62; border-color:#2e8b62;}
+  .meter .seg.f7{background:#14532d; border-color:#14532d;}
+  .meter .marks{display:flex; gap:4px; margin-top:5px;}
+  .meter .mark{flex:1; text-align:center; font-size:.7rem; font-weight:800; letter-spacing:.04em; min-height:1em;}
+  .meter .mark.you{color:#8c2f2f;}
+  .meter .mark.could{color:var(--ok);}
+  .meter .scalewrap{display:flex; justify-content:space-between; font-size:.78rem; color:var(--muted); margin-top:2px;}
+  .levelword{font-weight:800; color:var(--navy);}
+  ul.tips{margin:0 0 0 1.2em;}
+  ul.tips li{margin-bottom:6px;}
+  ul.tips li:last-child{margin-bottom:0;}
+  /* Good / Better / Best tier choices */
+  .tiers{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:6px;}
+  @media (max-width:560px){ .tiers{grid-template-columns:1fr;} }
+  button.tier{
+    appearance:none; border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:14px; padding:14px 12px; cursor:pointer; font-family:inherit; text-align:left;
+  }
+  button.tier:hover{background:var(--gold-soft);}
+  button.tier:focus{outline:3px solid var(--gold-soft); outline-offset:2px;}
+  button.tier[aria-pressed="true"]{background:var(--navy); color:#fff; border-color:var(--navy);}
+  button.tier .tname{display:block; font-size:.74rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:#a8851e; margin-bottom:4px;}
+  button.tier[aria-pressed="true"] .tname{color:var(--gold);}
+  button.tier .twhat{display:block; font-size:1.02rem; font-weight:700; line-height:1.3;}
+  button.tier .tsub{display:block; font-size:.86rem; font-weight:400; margin-top:4px; color:var(--muted);}
+  button.tier[aria-pressed="true"] .tsub{color:#dbe4f0;}
+  /* Numbered walk-through step cards */
+  ol.steps{list-style:none; counter-reset:step; margin-top:4px;}
+  ol.steps li{
+    counter-increment:step; position:relative; background:#fff; border:2px solid #e4ddc8;
+    border-radius:12px; padding:14px 14px 14px 58px; margin-bottom:10px;
+  }
+  ol.steps li::before{
+    content:counter(step); position:absolute; left:14px; top:12px;
+    width:32px; height:32px; border-radius:50%; background:var(--navy); color:var(--gold);
+    font-weight:800; font-size:1rem; display:flex; align-items:center; justify-content:center;
+  }
+  ol.steps li strong.lead{display:block; color:var(--navy); margin-bottom:2px;}
+  ol.steps li p{margin-bottom:0; font-size:.98rem;}
+  .note{
+    background:#eef4ee; border-left:5px solid var(--ok); border-radius:8px;
+    padding:12px 14px; margin-top:14px; font-size:.97rem;
+  }
+  .note strong{color:var(--ok);}
+  .caution{
+    background:var(--warn-bg); border-left:5px solid var(--warn-line); border-radius:8px;
+    padding:12px 14px; margin-top:14px; font-size:.97rem;
+  }
+  .watchline{
+    margin-top:16px; background:var(--warn-bg); border:2px solid var(--warn-line);
+    border-radius:12px; padding:12px 14px; font-size:.98rem;
+  }
+  .watchline a{color:var(--navy); font-weight:700;}
+  .actions{margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;}
+  button.util{
+    appearance:none; border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:10px; padding:11px 16px; font-size:.95rem; font-weight:700; cursor:pointer;
+  }
+  button.util:hover{background:var(--gold-soft);}
+  section.questions{margin-top:38px; border-top:2px solid var(--gold); padding-top:22px;}
+  section.questions h2{font-family:Georgia,serif; font-size:1.35rem; color:var(--navy); margin-bottom:10px;}
+  section.questions p.intro{margin-bottom:12px;}
+  .qa{border:2px solid var(--navy); border-radius:14px; background:#fff; margin-bottom:10px; overflow:hidden;}
+  .qa-btn{
+    width:100%; appearance:none; border:0; background:#fff; color:var(--navy);
+    font-family:inherit; font-size:1.05rem; font-weight:700; text-align:left;
+    padding:16px 46px 16px 16px; cursor:pointer; position:relative; line-height:1.35;
+  }
+  .qa-btn:hover{background:var(--gold-soft);}
+  .qa-btn:focus{outline:3px solid var(--gold-soft); outline-offset:-3px;}
+  .qa-btn .chev{
+    position:absolute; right:16px; top:50%; transform:translateY(-50%);
+    color:#a8851e; font-size:1.15rem; transition:transform .15s ease;
+  }
+  .qa.open .qa-btn .chev{transform:translateY(-50%) rotate(180deg);}
+  .qa-panel{padding:4px 16px 16px; border-top:1px solid #e4ddc8;}
+  .qa-panel p{margin-bottom:10px;}
+  .qa-panel p:last-child{margin-bottom:0;}
+  .qa-panel ol{margin:0 0 10px 1.25em;}
+  .qa-panel li{margin-bottom:6px;}
+  .dodont{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;}
+  @media (max-width:560px){ .dodont{grid-template-columns:1fr;} }
+  .dodont .box{border-radius:8px; padding:10px 12px; font-size:.95rem;}
+  .dodont .do{background:#eef4ee; border-left:5px solid var(--ok);}
+  .dodont .dont{background:#fbeaea; border-left:5px solid #c08585;}
+  .dodont h4{font-size:.78rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin-bottom:6px;}
+  .dodont .do h4{color:var(--ok);}
+  .dodont .dont h4{color:#8c2f2f;}
+  .dodont ul{margin:0 0 0 1.1em;}
+  .dodont li{margin-bottom:5px;}
+  .dodont li:last-child{margin-bottom:0;}
+  p.builtfrom{margin-top:16px; font-size:.85rem; color:var(--muted); text-align:center;}
+  footer{
+    margin-top:40px; border-top:2px solid var(--gold); padding-top:18px;
+    text-align:center; color:var(--muted); font-size:.92rem;
+  }
+  footer .pointers{margin-bottom:12px; font-size:1rem;}
+  footer .pointers a{color:var(--navy); font-weight:700; text-decoration:none; margin:0 8px; white-space:nowrap;}
+  footer .pointers a:hover{text-decoration:underline;}
+  footer .freenote{
+    background:#fff; border:1px solid #e4ddc8; border-radius:12px; padding:14px 16px;
+    color:var(--ink); max-width:560px; margin:0 auto 12px;
+  }
+  @media print{
+    .watermark, .actions, select.pick, .tiers{display:none !important;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<div class="watermark" aria-hidden="true"><span>Z</span></div>
+
+<header>
+  <div class="brand">ztrader88</div>
+  <h1>Get Secure Toolkit</h1>
+  <p>What You Need to Know</p>
+  <p class="nodata">No personal information required.</p>
+</header>
+
+<div class="wrap">
+
+  <!-- ================= PART 1 — THE CHECKUP ================= -->
+  <p class="step-label"><span class="n">Part 1</span> — The Checkup</p>
+  <p class="hook">Test your security readiness. <strong>Before someone else does.</strong></p>
+  <h2 class="q">How do you secure your email today?</h2>
+  <p class="lede">We start with email because email is the master key — it can reset almost everything else you own.</p>
+  <select class="pick" id="emailSelect" aria-label="How do you secure your email today?"></select>
+
+  <div id="checkupResult" class="hidden"></div>
+
+  <div id="upgradeBlock" class="hidden">
+    <p class="step-label"><span class="n">Next</span> — Your Options</p>
+    <h2 class="q">Want to get more secure?</h2>
+    <p class="lede">Three ways up. Pick one and we walk you through it.</p>
+    <div class="tiers" role="group" aria-label="Choose how much more secure you want to get">
+      <button class="tier" id="tier-good" aria-pressed="false">
+        <span class="tname">Good</span>
+        <span class="twhat">Authenticator app</span>
+        <span class="tsub">A code that changes every 30 seconds</span>
+      </button>
+      <button class="tier" id="tier-better" aria-pressed="false">
+        <span class="tname">Better</span>
+        <span class="twhat">Passkey</span>
+        <span class="tsub">Sign in with your face, fingerprint, or PIN</span>
+      </button>
+      <button class="tier" id="tier-best" aria-pressed="false">
+        <span class="tname">Best</span>
+        <span class="twhat">Hardware key</span>
+        <span class="tsub">A small key you plug in or tap</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="branchResult" class="hidden"></div>
+
+  <!--
+    SOURCES — every factual claim in this tool, including the Questions section below,
+    is grounded in these primary sources, read in full (November 2026):
+    FIDO Alliance, "Passkeys" — https://fidoalliance.org/passkeys-2/
+    Google Account Help, "Sign in with a passkey instead of a password" — https://support.google.com/accounts/answer/13548313
+    Google Account Help, "Get verification codes with Google Authenticator" — https://support.google.com/accounts/answer/1066447
+    Google Account Help, "Sign in with backup codes" — https://support.google.com/accounts/answer/1187538
+    Apple Support, "Use passkeys to sign in to websites and apps on iPhone" — https://support.apple.com/guide/iphone/use-passkeys-to-sign-in-to-websites-and-apps-iphf538ea8d0/ios
+    Microsoft Support, "What are passkeys and why they matter" — https://support.microsoft.com/en-au/windows/passkeys-overview-301c8944-5ea2-452b-9886-97e4d2ef4422
+    Microsoft Support, "Microsoft Authenticator FAQs" — https://support.microsoft.com/en-gb/authenticator/microsoft-authenticator-faqs
+    FTC Consumer Advice, "Scammers hide harmful links in QR codes to steal your information" — https://consumer.ftc.gov/consumer-alerts/2023/12/scammers-hide-harmful-links-qr-codes-steal-your-information
+  -->
+
+  <!-- ================= PART 2 — QUESTIONS PEOPLE ASK ================= -->
+  <section class="questions">
+    <h2>Questions people ask</h2>
+    <p class="intro">Tap a question — the answer opens right under it.</p>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">I just got a new phone — where did my passkeys go?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Nowhere — they follow your account, not the phone. If the new phone is signed in to the same Apple Account or the same Google account, your synced passkeys arrive on their own — there's nothing to move by hand.</p>
+        <p><strong>The order matters:</strong> check you can sign in on the new phone <strong>before</strong> you wipe or trade in the old one.</p>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Sign the new phone in to the same Apple Account or Google account — that's what brings your passkeys over.</li>
+              <li>Finish while the old phone is still in your hand: some things, like Google Authenticator codes moved by hand, can only move from the old phone itself.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t wipe or trade in the old phone until the new one has signed you in.</li>
+              <li>Don’t expect an iPhone passkey to turn up on an Android phone — syncing stays inside one home: Apple with Apple, Google with Google.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">It asked me to scan a QR code — is that safe?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p><strong>Yes — when the code appeared because you started signing in.</strong> It's the normal way a passkey on your phone signs you in on a computer:</p>
+        <ol>
+          <li>On the computer, start signing in and choose the option like “Use a passkey from another device.” A QR code appears on <strong>your</strong> screen.</li>
+          <li>Scan it with the phone that holds your passkey.</li>
+          <li>Keep the phone close to the computer — Bluetooth checks the two are side by side, and that closeness is the protection: a scammer far away can't use your sign-in, because their device isn't in the room.</li>
+          <li>Approve on your phone with your face, fingerprint, or PIN. Your passkey stays on your phone — the computer only gets the yes.</li>
+        </ol>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Only scan a code that appeared on your own screen because you started the sign-in.</li>
+              <li>Keep Bluetooth on and your phone next to the computer while you scan.</li>
+              <li>If a message claims there's a problem with your account, contact the company through a phone number or website you already know is real.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t accept QR codes from people you don’t know — never scan a code sent by a stranger, or by someone claiming to be “support.”</li>
+              <li>Don’t scan a code from an email or text you weren’t expecting — especially one that urges you to act immediately.</li>
+              <li>Don’t rush. Urgency is the trap: scammers want you to scan without thinking.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">What's an authenticator app — and how is it different from a passkey?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>An authenticator app shows a fresh six-digit code every 30 seconds, which you type in after your password. The codes are made on your phone — they even work with no internet connection.</p>
+        <p>A passkey is different: it replaces the password itself. You sign in with your face, fingerprint, or PIN — the same way you unlock your device — and there's no code to type. Passkeys can't be copied or accidentally given away, which is what makes them resistant to phishing.</p>
+        <p><strong>Our recommendation:</strong> passkey as your main lock — and keep an authenticator app set up as your spare key, so if you ever lose your passkey, the app still gets you back in.</p>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Use a passkey wherever one is offered — Google's own advice is to consider enrolling in passkeys.</li>
+              <li>Keep more than one way in, so a single lost phone can't lock you out.</li>
+              <li>Leave your phone's date and time set to automatic — authenticator codes depend on the correct time.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t read a code out to anyone who calls or texts asking for it — no real company will ever ask. That call is a break-in in progress.</li>
+              <li>Don’t type a code into a page you reached from an unexpected message: a typed code can be phished by a look-alike site; a passkey can't.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">Can I use a passkey AND an authenticator app on the same account?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Yes. Google says it plainly: adding a passkey to your account “doesn't change or remove any authentication or recovery factors currently on your account.” Apple says the same from its side — you can have a passkey and a password for the same website or app, side by side.</p>
+        <p>And that's exactly the pairing we recommend: passkey in front, authenticator app as the backup. Set up both while everything is working — not during a lockout.</p>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Keep your older ways in as the backup — adding a passkey doesn't remove them, and that's a feature.</li>
+              <li>Follow Microsoft's tip: create passkeys on your other devices too — phone, tablet, laptop — to act as a digital spare key.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t create a passkey on a shared or borrowed device — anyone who can unlock that device could get into your account.</li>
+              <li>Don’t wait for a lockout to set up your backup. By then it's too late to add either one.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">My passkey didn't work — what do I check first?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Three quick checks:</p>
+        <ol>
+          <li><strong>Same account?</strong> Passkeys only appear on devices signed in to the same Apple Account or Google account that holds them.</li>
+          <li><strong>Bluetooth on, phone nearby?</strong> Google's own tip for the QR sign-in is: check that Bluetooth is on — the phone and the computer confirm they're side by side before anything works.</li>
+          <li><strong>Right door?</strong> On Google's sign-in, it's “Try another way,” then “Use your passkey.” On an Apple sign-in, look for “Passkey from nearby device.”</li>
+        </ol>
+        <p>If it still won't work, use your backup — authenticator app or backup codes — rather than starting over. Google's “Try another way” exists for exactly that: it takes you back to your earlier sign-in choices.</p>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Work through the three checks above, in order.</li>
+              <li>Fall back to your backup way in — that's what it's there for.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t create a new passkey on a shared or borrowed computer just to get in — passkeys belong only on devices you own.</li>
+              <li>Don’t delete the passkey while you troubleshoot — removing one is for a lost device, or one created on a shared device by mistake.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">I lost my phone. Can I still get into my accounts?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Usually, yes — if your passkeys sync. Sign in to the same Apple Account or Google account on your new phone, and your passkeys come back with it.</p>
+        <p>Your other ways in matter here. If your authenticator codes were synced to your account — Google Authenticator can sync them — signing in on the new phone brings them back too. And backup codes were made for exactly this: Google says to create them “in case you lose your phone.” Each one works once.</p>
+        <p>One honest exception: a passkey that lived only on the lost phone — a device-bound passkey — is gone with it, unless you have another way in. Which is the whole point of the spare key, set up <strong>before</strong> anything goes wrong.</p>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Make backup codes now, and keep a printed set somewhere safe — Google suggests with your passport or other important documents.</li>
+              <li>Turn on sync for your authenticator codes, so they're not trapped on one phone.</li>
+              <li>Once you're back in on a device you control, remove the passkey that was on the lost phone.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t share your backup codes with anyone — Google never asks for one, except when you're signing in yourself.</li>
+              <li>Don’t leave the lost phone's passkey active on your account.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="builtfrom">Built from: FIDO Alliance · Google Account Help · Apple Support · Microsoft Support · FTC</p>
+
+  </section>
+
+  <footer>
+    <div class="pointers">
+      <a href="https://www.youtube.com/@ztrader880" target="_blank" rel="noopener">▶ YouTube — @ztrader880</a>
+      <a href="https://github.com/ztrader88011/ZTrader88-Toolkit" target="_blank" rel="noopener">🧰 Our free tools</a>
+      <a href="https://gist.github.com/ztrader88011/c515828065a773ff1da85a6cc2e070a8" target="_blank" rel="noopener">📄 Locked out? The official way back in</a>
+      <a href="https://www.facebook.com/ztrader88" target="_blank" rel="noopener">📘 Facebook — ztrader88</a>
+    </div>
+    <div class="freenote">
+      These tools are free — no catch. If one helped you, the best way to support us costs nothing: like, share, and subscribe, on whichever platform you found us. That’s what keeps the lessons coming.
+    </div>
+    <p>ztrader88 — tech news and safety lessons in plain English. No jargon, no hype.<br>
+    This tool collects nothing — no account, no data, ever.</p>
+  </footer>
+
+</div>
+
+<script>
+var EMAIL_VIDEO = "https://www.youtube.com/watch?v=VqpRBfhJKgU";
+var PASSKEY_VIDEO = "https://www.youtube.com/watch?v=xAvz5xY0hqU";
+var KRAKEN_VIDEO = "https://www.youtube.com/watch?v=GcvvZKrKmTA";
+var MAXLEVEL = 7;
+
+var METHODS = {
+  password: { label: "Just a password" },
+  sms:      { label: "Password + a code sent to me" },
+  authapp:  { label: "Password + an authenticator app" },
+  passkey:  { label: "A passkey" },
+  hwkey:    { label: "A hardware key" }
+};
+
+var CHECKUP = {
+  password: {
+    level: 1, word: "Very low",
+    why: [
+      "A password can be guessed, stolen, or tricked out of you — and this one guards the master key.",
+      "Email resets your bank and almost everything else. A weak lock here can unlock all of it.",
+      "Fine for a shop account. Not for email or a bank."
+    ],
+    tips: [
+      "Use a long, random password you don't use anywhere else.",
+      "Let a password manager remember it for you — that's what they're for.",
+      "Never reuse your email password on another site."
+    ]
+  },
+  sms: {
+    level: 3, word: "Fair",
+    why: [
+      "Better: a thief now needs your phone as well as your password.",
+      "But a text can be intercepted or redirected — and a fake page can trick you into typing the code.",
+      "Your email is the master key. It deserves a stronger lock than a text message."
+    ],
+    tips: [
+      "Never read a code out to anyone who calls or texts — no real company will ever ask.",
+      "Don't type a code into a page you reached from an unexpected message.",
+      "Keep your phone locked — a texted code is only as safe as the phone it lands on."
+    ]
+  },
+  authapp: {
+    level: 4, word: "Good",
+    why: [
+      "The code lives in an app on your phone and changes every 30 seconds — far harder to steal than a text.",
+      "You still type it by hand, so a look-alike page can still trick you into giving it away.",
+      "A solid lock for the master key — and there's stronger above it."
+    ],
+    tips: [
+      "Leave your phone's date and time set to automatic — the codes depend on the correct time.",
+      "Turn on sync for your codes, so they're not trapped on one phone.",
+      "Make backup codes, and keep a printed set somewhere safe."
+    ]
+  },
+  passkey: {
+    level: 6, word: "Very strong",
+    why: [
+      "No password to steal, guess, or type into a fake page — you approve with your face, fingerprint, or PIN.",
+      "Your passkeys travel with your Apple, Google, or Microsoft account, so a new phone brings them back.",
+      "That can't-be-copied part is what makes passkeys resistant to phishing."
+    ],
+    tips: [
+      "Create passkeys on your other devices too — phone, tablet, laptop — as a digital spare key.",
+      "Never create a passkey on a shared or borrowed device.",
+      "Keep your password as a backup — adding a passkey removes nothing."
+    ]
+  },
+  hwkey: {
+    level: 7, word: "Strongest",
+    why: [
+      "The key itself does the approving, and it never leaves your hand.",
+      "Nothing to type means nothing for a fake page to steal.",
+      "The strongest lock we know for email, a bank, or an exchange."
+    ],
+    tips: [
+      "Register a spare key, and keep it somewhere safe.",
+      "Test the spare once, so you know it works before you need it.",
+      "A lost key is only a crisis if it's your only one — see the tip above."
+    ]
+  }
+};
+
+var AUTH_STEPS = [
+  { lead: "Get an authenticator app",
+    text: "Apps like Google Authenticator or Microsoft Authenticator live on your phone. They're free, and the codes work with no internet connection." },
+  { lead: "Turn it on for your email",
+    text: "In your email account's security settings, find two-step verification, choose the authenticator app, and scan the QR code the site shows you. That's the one-time setup." },
+  { lead: "How it works",
+    text: "The app and the website share a secret. The app turns it into a fresh six-digit code every 30 seconds — you type it in after your password." },
+  { lead: "New phone? Plan ahead",
+    text: "Your codes live in the app, on that phone. They come back on a new phone only if the app synced them, or you transfer them — so set the new phone up before you wipe the old one." },
+  { lead: "Save your backup codes",
+    text: "Print them and keep them somewhere safe, like with your passport. Each code works once — they're your way back in if the phone is ever gone." }
+];
+
+var HW_STEPS = [
+  { lead: "What it is",
+    text: "A small key — like a USB stick with a button — that you plug in or tap against your device. The passkey lives on the key itself." },
+  { lead: "How you sign in",
+    text: "Plug it in, touch it, you're in. The key does the approving, so there's no code to type and nothing for a fake page to steal." },
+  { lead: "Where it earns its keep",
+    text: "This is the strongest option for the accounts that matter most: your email, your bank, an exchange." },
+  { lead: "Register a spare",
+    text: "Keys get lost. Register a second key now, while everything works, and keep it somewhere safe — so a lost key never becomes a lockout." }
+];
+
+var DEVICES = {
+  iphone:  { label: "An iPhone",
+             lives: "Your passkeys live in your Apple account, in iCloud Keychain — they travel with the account, not the phone." },
+  android: { label: "An Android phone",
+             lives: "Your passkeys live in your Google account, in Google Password Manager — they travel with the account, not the phone." },
+  windows: { label: "A Windows computer",
+             lives: "A Windows passkey lives on that computer, held by Windows Hello — it may not travel to other devices." }
+};
+
+function passkeySteps(device){
+  var d = DEVICES[device];
+  var restore = (device === "windows")
+    ? "Careful here: a Windows Hello passkey may live only on the one computer where it was made. For a spare, make a passkey on your phone too — phones carry theirs in your account."
+    : "Sign in to the same account on the new phone, and your passkeys come back with it. Check the new phone signs you in before you wipe or trade in the old one.";
+  return [
+    { lead: "Where your passkey lives", text: d.lives },
+    { lead: "How you sign in",
+      text: "With your face, fingerprint, or PIN — the same way you unlock the device. No password to type, and nothing for a fake page to steal." },
+    { lead: "When you get a new device", text: restore },
+    { lead: "Signing in on another device",
+      text: "Start signing in on the computer and choose “Use a passkey from another device.” Scan the QR code with your phone, keep the phone close — Bluetooth checks the two are side by side — and approve. The passkey never leaves your phone." },
+    { lead: "Your password stays",
+      text: "Adding a passkey doesn't remove anything already on your account. Your password stays there as a backup way in." }
+  ];
+}
+
+var currentMethod = null;
+var currentTier = null;
+
+function el(id){ return document.getElementById(id); }
+
+function fillSelect(sel, items){
+  sel.innerHTML = '';
+  var ph = document.createElement('option');
+  ph.value = ''; ph.textContent = 'Choose…';
+  sel.appendChild(ph);
+  Object.keys(items).forEach(function(key){
+    var o = document.createElement('option');
+    o.value = key; o.textContent = items[key].label;
+    sel.appendChild(o);
+  });
+  sel.value = '';
+}
+
+function meterHtml(level){
+  var segs = '', marks = '';
+  for(var i = 1; i <= MAXLEVEL; i++){
+    segs += '<div class="seg' + (i <= level ? ' f' + i : '') + '"></div>';
+    var label = '', cls = '';
+    if(i === level && level === MAXLEVEL){ label = '▲ YOU — TOP'; cls = 'you'; }
+    else if(i === level){ label = '▲ YOU'; cls = 'you'; }
+    else if(i === MAXLEVEL){ label = '▲ COULD BE'; cls = 'could'; }
+    marks += '<div class="mark ' + cls + '">' + label + '</div>';
+  }
+  return '<div class="meter"><div class="segs">' + segs + '</div>' +
+         '<div class="marks">' + marks + '</div>' +
+         '<div class="scalewrap"><span>Weaker</span><span>Stronger</span></div></div>';
+}
+
+function stepsHtml(steps){
+  var html = '<ol class="steps">';
+  steps.forEach(function(s){
+    html += '<li><strong class="lead">' + s.lead + '</strong><p>' + s.text + '</p></li>';
+  });
+  return html + '</ol>';
+}
+
+function watchHtml(url, text){
+  return '<div class="watchline">▶ <a href="' + url + '" target="_blank" rel="noopener">' +
+         text + '</a> — free on our YouTube channel.</div>';
+}
+
+function onEmailChange(){
+  var v = el('emailSelect').value;
+  currentMethod = v ? v : null;
+  currentTier = null;
+  ['good','better','best'].forEach(function(t){
+    el('tier-' + t).setAttribute('aria-pressed', 'false');
+  });
+  el('branchResult').classList.add('hidden');
+  el('branchResult').innerHTML = '';
+  if(!currentMethod){
+    el('checkupResult').classList.add('hidden');
+    el('upgradeBlock').classList.add('hidden');
+    return;
+  }
+  var c = CHECKUP[currentMethod];
+  var html = '<h3>Your security meter: <span class="levelword">' + c.word + '</span> — step ' + c.level + ' of ' + MAXLEVEL + '</h3>';
+  html += meterHtml(c.level);
+  c.why.forEach(function(line){ html += '<p>' + line + '</p>'; });
+  html += '<h3>Make what you have stronger</h3><ul class="tips">';
+  c.tips.forEach(function(t){ html += '<li>' + t + '</li>'; });
+  html += '</ul>';
+  html += '<div class="actions"><button class="util" onclick="window.print()">🖨 Print this</button>' +
+          '<button class="util" onclick="startOver()">↺ Start over</button></div>';
+  var r = el('checkupResult');
+  r.innerHTML = html;
+  r.className = 'result';
+  el('upgradeBlock').classList.remove('hidden');
+  r.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function pickTier(tier){
+  currentTier = tier;
+  ['good','better','best'].forEach(function(t){
+    el('tier-' + t).setAttribute('aria-pressed', t === tier ? 'true' : 'false');
+  });
+  var b = el('branchResult');
+  var html = '';
+  if(tier === 'good'){
+    html = '<h3>Good — the authenticator app</h3>' +
+           '<p>A code that changes every 30 seconds, on top of your password. Here\'s the whole setup:</p>' +
+           stepsHtml(AUTH_STEPS) +
+           watchHtml(EMAIL_VIDEO, 'Watch the lesson: email security — protect the master key') +
+           watchHtml(KRAKEN_VIDEO, 'Locked out of Kraken by a code that won\'t work? Watch this');
+  } else if(tier === 'best'){
+    html = '<h3>Best — the hardware key</h3>' +
+           '<p>The strongest lock there is. Here\'s how it works:</p>' +
+           stepsHtml(HW_STEPS) +
+           watchHtml(EMAIL_VIDEO, 'Watch the lesson: email security — protect the master key');
+  } else {
+    html = '<h3>Better — the passkey</h3>' +
+           '<p>No password to type, nothing for a fake page to steal. First, your device:</p>' +
+           '<select class="pick" id="deviceSelect" aria-label="What device will you use the passkey on?"></select>' +
+           '<div id="passkeySteps" style="margin-top:16px;"></div>';
+  }
+  b.innerHTML = html;
+  b.className = 'result';
+  if(tier === 'better'){
+    fillSelect(el('deviceSelect'), DEVICES);
+    el('deviceSelect').addEventListener('change', onDeviceChange);
+  }
+  b.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function onDeviceChange(){
+  var v = el('deviceSelect').value;
+  var box = el('passkeySteps');
+  if(!v){ box.innerHTML = ''; return; }
+  box.innerHTML = stepsHtml(passkeySteps(v)) +
+    watchHtml(PASSKEY_VIDEO, 'Watch the lesson: passkeys, in plain English');
+  box.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function startOver(){
+  currentMethod = null;
+  currentTier = null;
+  el('emailSelect').value = '';
+  el('checkupResult').classList.add('hidden');
+  el('upgradeBlock').classList.add('hidden');
+  el('branchResult').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+fillSelect(el('emailSelect'), METHODS);
+el('emailSelect').addEventListener('change', onEmailChange);
+el('tier-good').addEventListener('click', function(){ pickTier('good'); });
+el('tier-better').addEventListener('click', function(){ pickTier('better'); });
+el('tier-best').addEventListener('click', function(){ pickTier('best'); });
+
+/* "Questions people ask" accordion — one answer open at a time */
+var qaBtns = document.querySelectorAll('.qa-btn');
+qaBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var item = btn.parentElement;
+    var panel = item.querySelector('.qa-panel');
+    var wasOpen = item.classList.contains('open');
+    var openItems = document.querySelectorAll('.qa.open');
+    openItems.forEach(function(o){
+      o.classList.remove('open');
+      o.querySelector('.qa-panel').classList.add('hidden');
+      o.querySelector('.qa-btn').setAttribute('aria-expanded', 'false');
+    });
+    if(!wasOpen){
+      item.classList.add('open');
+      panel.classList.remove('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+</script>
+</body>
+</html>

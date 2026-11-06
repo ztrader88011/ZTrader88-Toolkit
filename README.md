@@ -17,6 +17,10 @@ written for beginners: no jargon, no hype.
   Apple, or Microsoft — and you want to avoid fake support numbers and paid
   "recovery" scams.
   Open it here: [tools/door-finder/index.html](tools/door-finder/index.html)
+- **Get Secure Toolkit — test your security readiness**
+  Use when: you want to know how secure your sign-in really is — and the good,
+  better, best steps to raise it.
+  Open it here: [tools/get-secure-toolkit/index.html](tools/get-secure-toolkit/index.html)
 - **25 Top Tips — Stop Your Agents Burning Tokens**
   Use when: your AI agent is burning through tokens or money and you want it
   stopped.
