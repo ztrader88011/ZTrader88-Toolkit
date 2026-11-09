@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will My Passkey Work Over There? — The Passkey Cross-Device Checker | ztrader88</title>
+<meta name="description" content="Made a passkey on one device and want to sign in on another? Pick where your passkey lives and where you want to sign in — this free tool gives you the plain-English answer.">
+<style>
+  :root{
+    --navy:#0b1e3a; --navy2:#12294d; --gold:#d4af37; --gold-soft:#f3e3ac;
+    --paper:#fdfaf2; --ink:#1c2430; --muted:#5a6572; --warn-bg:#fdf3e3; --warn-line:#d4af37;
+    --ok:#1d6b4f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{font-size:19px;}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.55;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
+  }
+  /* Highly transparent avatar watermark — brand presence, never in the way */
+  .watermark{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .watermark span{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:78vmin; line-height:1; color:var(--navy); opacity:.045;
+    transform:rotate(-12deg); user-select:none;
+  }
+  .wrap{position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 18px 40px;}
+  header{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff; padding:30px 18px 26px; text-align:center; position:relative; z-index:1;
+    border-bottom:4px solid var(--gold);
+  }
+  .brand{
+    font-size:.78rem; letter-spacing:.32em; text-transform:uppercase; color:var(--gold);
+    font-weight:700;
+  }
+  header h1{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:2.15rem; line-height:1.15; margin:10px 0 8px;
+  }
+  header p{color:#dbe4f0; font-size:1.02rem; max-width:520px; margin:0 auto;}
+  header p.nodata{color:var(--gold-soft); font-size:.93rem; margin:12px auto 0;}
+  .step-label{
+    margin:26px 0 10px; font-size:.8rem; font-weight:700; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .step-label .n{color:var(--gold); }
+  h2.q{font-family:Georgia,serif; font-size:1.45rem; color:var(--navy); margin-bottom:14px;}
+  select.pick{
+    width:100%; min-height:64px; border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:14px; padding:16px 14px; font-size:1.08rem; font-weight:700;
+    cursor:pointer; font-family:inherit;
+  }
+  select.pick:focus{outline:3px solid var(--gold-soft); border-color:var(--gold);}
+  select.pick:hover{background:var(--gold-soft);}
+  .hidden{display:none !important;}
+  .result{
+    background:#fff; border:2px solid var(--navy); border-radius:16px;
+    padding:22px 20px; margin-top:6px; box-shadow:0 6px 24px rgba(11,30,58,.08);
+  }
+  .result h3{font-family:Georgia,serif; font-size:1.3rem; color:var(--navy); margin-bottom:4px;}
+  .result p{margin-bottom:10px;}
+  .result p:last-of-type{margin-bottom:0;}
+  .verdict{
+    display:inline-block; font-size:.78rem; font-weight:800; letter-spacing:.14em;
+    text-transform:uppercase; border-radius:999px; padding:5px 12px; margin-bottom:10px;
+  }
+  .verdict.yes{background:#eef4ee; color:var(--ok); border:2px solid var(--ok);}
+  .verdict.bridge{background:var(--warn-bg); color:var(--navy); border:2px solid var(--warn-line);}
+  .verdict.no{background:#fbeaea; color:#8c2f2f; border:2px solid #c08585;}
+  .note{
+    background:#eef4ee; border-left:5px solid var(--ok); border-radius:8px;
+    padding:12px 14px; margin-top:14px; font-size:.97rem;
+  }
+  .note strong{color:var(--ok);}
+  .caution{
+    background:var(--warn-bg); border-left:5px solid var(--warn-line); border-radius:8px;
+    padding:12px 14px; margin-top:14px; font-size:.97rem;
+  }
+  .actions{margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;}
+  button.util{
+    appearance:none; border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:10px; padding:11px 16px; font-size:.95rem; font-weight:700; cursor:pointer;
+  }
+  button.util:hover{background:var(--gold-soft);}
+  section.questions{margin-top:34px;}
+  section.questions h2{font-family:Georgia,serif; font-size:1.35rem; color:var(--navy); margin-bottom:10px;}
+  section.questions p.intro{margin-bottom:12px;}
+  .qa{border:2px solid var(--navy); border-radius:14px; background:#fff; margin-bottom:10px; overflow:hidden;}
+  .qa-btn{
+    width:100%; appearance:none; border:0; background:#fff; color:var(--navy);
+    font-family:inherit; font-size:1.05rem; font-weight:700; text-align:left;
+    padding:16px 46px 16px 16px; cursor:pointer; position:relative; line-height:1.35;
+  }
+  .qa-btn:hover{background:var(--gold-soft);}
+  .qa-btn:focus{outline:3px solid var(--gold-soft); outline-offset:-3px;}
+  .qa-btn .chev{
+    position:absolute; right:16px; top:50%; transform:translateY(-50%);
+    color:#a8851e; font-size:1.15rem; transition:transform .15s ease;
+  }
+  .qa.open .qa-btn .chev{transform:translateY(-50%) rotate(180deg);}
+  .qa-panel{padding:4px 16px 16px; border-top:1px solid #e4ddc8;}
+  .qa-panel p{margin-bottom:10px;}
+  .qa-panel p:last-child{margin-bottom:0;}
+  .qa-panel ol{margin:0 0 10px 1.25em;}
+  .qa-panel li{margin-bottom:6px;}
+  .dodont{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;}
+  @media (max-width:560px){ .dodont{grid-template-columns:1fr;} }
+  .dodont .box{border-radius:8px; padding:10px 12px; font-size:.95rem;}
+  .dodont .do{background:#eef4ee; border-left:5px solid var(--ok);}
+  .dodont .dont{background:#fbeaea; border-left:5px solid #c08585;}
+  .dodont h4{font-size:.78rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin-bottom:6px;}
+  .dodont .do h4{color:var(--ok);}
+  .dodont .dont h4{color:#8c2f2f;}
+  .dodont ul{margin:0 0 0 1.1em;}
+  .dodont li{margin-bottom:5px;}
+  .dodont li:last-child{margin-bottom:0;}
+  p.builtfrom{margin-top:16px; font-size:.85rem; color:var(--muted); text-align:center;}
+  footer{
+    margin-top:40px; border-top:2px solid var(--gold); padding-top:18px;
+    text-align:center; color:var(--muted); font-size:.92rem;
+  }
+  footer .pointers{margin-bottom:12px; font-size:1rem;}
+  footer .pointers a{color:var(--navy); font-weight:700; text-decoration:none; margin:0 8px; white-space:nowrap;}
+  footer .pointers a:hover{text-decoration:underline;}
+  footer .freenote{
+    background:#fff; border:1px solid #e4ddc8; border-radius:12px; padding:14px 16px;
+    color:var(--ink); max-width:560px; margin:0 auto 12px;
+  }
+  @media print{
+    .watermark, .actions, select.pick{display:none !important;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<div class="watermark" aria-hidden="true"><span>Z</span></div>
+
+<header>
+  <div class="brand">ztrader88</div>
+  <h1>Will My Passkey Work Over There?</h1>
+  <p>The passkey cross-device checker — free from ztrader88.</p>
+  <p class="nodata">No personal information required. We don’t collect any data — nothing you choose here is stored or sent anywhere.</p>
+</header>
+
+<div class="wrap">
+
+  <p class="step-label"><span class="n">Step 1</span> of 2</p>
+  <h2 class="q">Where does your passkey live?</h2>
+  <select class="pick" id="sourceSelect" aria-label="Where does your passkey live?"></select>
+
+  <div id="targetBlock" class="hidden">
+    <p class="step-label"><span class="n">Step 2</span> of 2</p>
+    <h2 class="q">Where do you want to sign in?</h2>
+    <select class="pick" id="targetSelect" aria-label="Where do you want to sign in?"></select>
+  </div>
+
+  <div id="result" class="hidden"></div>
+
+  <!--
+    SOURCES — every factual claim and every do/don't in the Questions section below
+    is grounded in these primary sources, read in full (November 2026):
+    FIDO Alliance, "Passkeys" — https://fidoalliance.org/passkeys-2/
+    Google Account Help, "Sign in with a passkey instead of a password" — https://support.google.com/accounts/answer/13548313
+    Google Account Help, "Get verification codes with Google Authenticator" — https://support.google.com/accounts/answer/1066447
+    Google Account Help, "Sign in with backup codes" — https://support.google.com/accounts/answer/1187538
+    Apple Support, "Use passkeys to sign in to websites and apps on iPhone" — https://support.apple.com/guide/iphone/use-passkeys-to-sign-in-to-websites-and-apps-iphf538ea8d0/ios
+    Microsoft Support, "What are passkeys and why they matter" — https://support.microsoft.com/en-au/windows/passkeys-overview-301c8944-5ea2-452b-9886-97e4d2ef4422
+    Microsoft Support, "Microsoft Authenticator FAQs" — https://support.microsoft.com/en-gb/authenticator/microsoft-authenticator-faqs
+    FTC Consumer Advice, "Scammers hide harmful links in QR codes to steal your information" — https://consumer.ftc.gov/consumer-alerts/2023/12/scammers-hide-harmful-links-qr-codes-steal-your-information
+  -->
+  <section class="questions">
+    <h2>Questions people ask</h2>
+    <p class="intro">Tap a question — the answer opens right under it.</p>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">I just got a new phone — where did my passkeys go?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Nowhere — they follow your account, not the phone. If the new phone is signed in to the same Apple Account or the same Google account, your synced passkeys arrive on their own — there's nothing to move by hand.</p>
+        <p><strong>The order matters:</strong> check you can sign in on the new phone <strong>before</strong> you wipe or trade in the old one.</p>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Sign the new phone in to the same Apple Account or Google account — that's what brings your passkeys over.</li>
+              <li>Finish while the old phone is still in your hand: some things, like Google Authenticator codes moved by hand, can only move from the old phone itself.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t wipe or trade in the old phone until the new one has signed you in.</li>
+              <li>Don’t expect an iPhone passkey to turn up on an Android phone — syncing stays inside one home: Apple with Apple, Google with Google.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">It asked me to scan a QR code — is that safe?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p><strong>Yes — when the code appeared because you started signing in.</strong> It's the normal way a passkey on your phone signs you in on a computer:</p>
+        <ol>
+          <li>On the computer, start signing in and choose the option like “Use a passkey from another device.” A QR code appears on <strong>your</strong> screen.</li>
+          <li>Scan it with the phone that holds your passkey.</li>
+          <li>Keep the phone close to the computer — Bluetooth checks the two are side by side, and that closeness is the protection: a scammer far away can't use your sign-in, because their device isn't in the room.</li>
+          <li>Approve on your phone with your face, fingerprint, or PIN. Your passkey stays on your phone — the computer only gets the yes.</li>
+        </ol>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Only scan a code that appeared on your own screen because you started the sign-in.</li>
+              <li>Keep Bluetooth on and your phone next to the computer while you scan.</li>
+              <li>If a message claims there's a problem with your account, contact the company through a phone number or website you already know is real.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t accept QR codes from people you don’t know — never scan a code sent by a stranger, or by someone claiming to be “support.”</li>
+              <li>Don’t scan a code from an email or text you weren’t expecting — especially one that urges you to act immediately.</li>
+              <li>Don’t rush. Urgency is the trap: scammers want you to scan without thinking.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">What's an authenticator app — and how is it different from a passkey?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>An authenticator app shows a fresh six-digit code every 30 seconds, which you type in after your password. The codes are made on your phone — they even work with no internet connection.</p>
+        <p>A passkey is different: it replaces the password itself. You sign in with your face, fingerprint, or PIN — the same way you unlock your device — and there's no code to type. Passkeys can't be copied or accidentally given away, which is what makes them resistant to phishing.</p>
+        <p><strong>Our recommendation:</strong> passkey as your main lock — and keep an authenticator app set up as your spare key, so if you ever lose your passkey, the app still gets you back in.</p>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Use a passkey wherever one is offered — Google's own advice is to consider enrolling in passkeys.</li>
+              <li>Keep more than one way in, so a single lost phone can't lock you out.</li>
+              <li>Leave your phone's date and time set to automatic — authenticator codes depend on the correct time.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t read a code out to anyone who calls or texts asking for it — no real company will ever ask. That call is a break-in in progress.</li>
+              <li>Don’t type a code into a page you reached from an unexpected message: a typed code can be phished by a look-alike site; a passkey can't.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">Can I use a passkey AND an authenticator app on the same account?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Yes. Google says it plainly: adding a passkey to your account “doesn't change or remove any authentication or recovery factors currently on your account.” Apple says the same from its side — you can have a passkey and a password for the same website or app, side by side.</p>
+        <p>And that's exactly the pairing we recommend: passkey in front, authenticator app as the backup. Set up both while everything is working — not during a lockout.</p>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Keep your older ways in as the backup — adding a passkey doesn't remove them, and that's a feature.</li>
+              <li>Follow Microsoft's tip: create passkeys on your other devices too — phone, tablet, laptop — to act as a digital spare key.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t create a passkey on a shared or borrowed device — anyone who can unlock that device could get into your account.</li>
+              <li>Don’t wait for a lockout to set up your backup. By then it's too late to add either one.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">My passkey didn't work — what do I check first?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Three quick checks:</p>
+        <ol>
+          <li><strong>Same account?</strong> Passkeys only appear on devices signed in to the same Apple Account or Google account that holds them.</li>
+          <li><strong>Bluetooth on, phone nearby?</strong> Google's own tip for the QR sign-in is: check that Bluetooth is on — the phone and the computer confirm they're side by side before anything works.</li>
+          <li><strong>Right door?</strong> On Google's sign-in, it's “Try another way,” then “Use your passkey.” On an Apple sign-in, look for “Passkey from nearby device.”</li>
+        </ol>
+        <p>If it still won't work, use your backup — authenticator app or backup codes — rather than starting over. Google's “Try another way” exists for exactly that: it takes you back to your earlier sign-in choices.</p>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Work through the three checks above, in order.</li>
+              <li>Fall back to your backup way in — that's what it's there for.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t create a new passkey on a shared or borrowed computer just to get in — passkeys belong only on devices you own.</li>
+              <li>Don’t delete the passkey while you troubleshoot — removing one is for a lost device, or one created on a shared device by mistake.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">I lost my phone. Can I still get into my accounts?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Usually, yes — if your passkeys sync. Sign in to the same Apple Account or Google account on your new phone, and your passkeys come back with it.</p>
+        <p>Your other ways in matter here. If your authenticator codes were synced to your account — Google Authenticator can sync them — signing in on the new phone brings them back too. And backup codes were made for exactly this: Google says to create them “in case you lose your phone.” Each one works once.</p>
+        <p>One honest exception: a passkey that lived only on the lost phone — a device-bound passkey — is gone with it, unless you have another way in. Which is the whole point of the spare key, set up <strong>before</strong> anything goes wrong.</p>
+        <div class="dodont">
+          <div class="box do">
+            <h4>Do</h4>
+            <ul>
+              <li>Make backup codes now, and keep a printed set somewhere safe — Google suggests with your passport or other important documents.</li>
+              <li>Turn on sync for your authenticator codes, so they're not trapped on one phone.</li>
+              <li>Once you're back in on a device you control, remove the passkey that was on the lost phone.</li>
+            </ul>
+          </div>
+          <div class="box dont">
+            <h4>Don’t</h4>
+            <ul>
+              <li>Don’t share your backup codes with anyone — Google never asks for one, except when you're signing in yourself.</li>
+              <li>Don’t leave the lost phone's passkey active on your account.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="builtfrom">Built from: FIDO Alliance · Google Account Help · Apple Support · Microsoft Support · FTC</p>
+
+    <div class="note"><strong>Watch the lesson:</strong> <a href="https://www.youtube.com/watch?v=xAvz5xY0hqU" target="_blank" rel="noopener">Passkeys, explained — Passkey vs 2FA: Why One Can Be Phished and One Can’t</a> — the plain-English passkey lesson behind this checker, free on our YouTube channel.</div>
+
+  </section>
+
+  <footer>
+    <div class="pointers">
+      <a href="https://www.youtube.com/@ztrader880" target="_blank" rel="noopener">▶ YouTube — @ztrader880</a>
+      <a href="https://gist.github.com/ztrader88011/c515828065a773ff1da85a6cc2e070a8" target="_blank" rel="noopener">📄 Our free guides</a>
+      <a href="https://www.facebook.com/ztrader88" target="_blank" rel="noopener">📘 Facebook — ztrader88</a>
+    </div>
+    <div class="freenote">
+      These tools are free — no catch. If one helped you, the best way to support us costs nothing: like, share, and subscribe, on whichever platform you found us. That’s what keeps the lessons coming.
+    </div>
+    <p>ztrader88 — tech news and safety lessons in plain English. No jargon, no hype.<br>
+    This tool collects nothing — no account, no data, ever.</p>
+  </footer>
+
+</div>
+
+<script>
+var SOURCES = {
+  apple:   { label: "On my iPhone or iPad",
+             sub: "It travels with your Apple account, in iCloud Keychain" },
+  android: { label: "On my Android phone",
+             sub: "It travels with your Google account, in Google Password Manager" },
+  windows: { label: "On my Windows computer",
+             sub: "A Windows Hello passkey, made on that computer" },
+  key:     { label: "On a small security key I plug in or tap",
+             sub: "The passkeys live on the key itself" }
+};
+
+var TARGETS = {
+  apple:   { label: "On my iPhone or iPad" },
+  android: { label: "On my Android phone" },
+  windows: { label: "On a Windows computer" },
+  mac:     { label: "On a Mac" }
+};
+
+var BRIDGE_STEPS =
+  "On the computer, start signing in and choose the option like “Use a passkey from another device.” " +
+  "A QR code appears on the screen. Scan it with your phone, keep the phone close by — Bluetooth must be on — " +
+  "and approve with your face or fingerprint. The passkey stays on your phone; the computer just borrows the approval.";
+
+var ANSWERS = {
+  /* ---- Passkey lives on iPhone / iPad (Apple, iCloud Keychain) ---- */
+  "apple>apple": {
+    verdict: "yes", verdictText: "Yes — it's already there",
+    title: "Your passkey travels with your Apple account",
+    paras: [
+      "Passkeys made on Apple devices travel with your iCloud Keychain account. If this iPhone or iPad is signed in with the same Apple account, the passkey is already there — just sign in and approve with your face or fingerprint."
+    ],
+    note: "<strong>Different Apple account?</strong> Then it won't be there. Passkeys follow the account, not the person."
+  },
+  "apple>android": {
+    verdict: "no", verdictText: "No — it doesn't travel there",
+    title: "Apple and Google don't sync with each other",
+    paras: [
+      "A passkey that lives in iCloud Keychain does not appear in Google Password Manager, so it won't show up on an Android phone on its own."
+    ],
+    caution: "<strong>Worth a try:</strong> if the sign-in screen on the Android phone offers “Use a passkey from another device,” keep your iPhone close, scan the QR code with it, make sure Bluetooth is on, and approve with your face or fingerprint. If it doesn't offer that choice, this passkey can't sign you in there."
+  },
+  "apple>windows": {
+    verdict: "bridge", verdictText: "Yes — bring your iPhone",
+    title: "Use your iPhone to sign in on the Windows computer",
+    paras: [ BRIDGE_STEPS ]
+  },
+  "apple>mac": {
+    verdict: "yes", verdictText: "Yes — it's already there",
+    title: "Your passkey travels with your Apple account",
+    paras: [
+      "A Mac is an Apple device too. Passkeys made on Apple devices travel with your iCloud Keychain account — if the Mac is signed in with the same Apple account, the passkey is already there."
+    ],
+    note: "<strong>Different Apple account on the Mac?</strong> Use your iPhone instead: on the Mac, choose “Use a passkey from another device,” scan the QR code with your iPhone, keep the phone close by with Bluetooth on, and approve with your face or fingerprint."
+  },
+
+  /* ---- Passkey lives on Android phone (Google Password Manager) ---- */
+  "android>apple": {
+    verdict: "no", verdictText: "No — it doesn't travel there",
+    title: "Google and Apple don't sync with each other",
+    paras: [
+      "A passkey that lives in Google Password Manager does not appear in iCloud Keychain, so it won't show up on an iPhone or iPad on its own."
+    ],
+    caution: "<strong>Worth a try:</strong> if the sign-in screen on the iPhone or iPad offers “Use a passkey from another device,” keep your Android phone close, scan the QR code with it, make sure Bluetooth is on, and approve with your face or fingerprint. If it doesn't offer that choice, this passkey can't sign you in there."
+  },
+  "android>android": {
+    verdict: "yes", verdictText: "Yes — it's already there",
+    title: "Your passkey travels with your Google account",
+    paras: [
+      "Passkeys on Android travel with your Google account, in Google Password Manager. If this Android phone is signed in with the same Google account, the passkey is already there — just sign in and approve."
+    ],
+    note: "<strong>Different Google account?</strong> Then it won't be there. Passkeys follow the account, not the person."
+  },
+  "android>windows": {
+    verdict: "yes", verdictText: "Yes — two ways in",
+    title: "Your Google account, or your phone",
+    paras: [
+      "First way: passkeys travel with your Google account through Google Password Manager — if you use Chrome on that Windows computer signed in with the same Google account, your passkey can already be there.",
+      "Second way — use your phone: " + BRIDGE_STEPS
+    ]
+  },
+  "android>mac": {
+    verdict: "bridge", verdictText: "Yes — bring your Android phone",
+    title: "Use your Android phone to sign in on the Mac",
+    paras: [
+      BRIDGE_STEPS,
+      "And if you use Chrome on the Mac signed in with the same Google account, your passkey may already be there too — passkeys travel with your Google account through Google Password Manager."
+    ]
+  },
+
+  /* ---- Passkey lives on a Windows computer (Windows Hello) ---- */
+  "windows>apple": {
+    verdict: "no", verdictText: "No — it stays on that computer",
+    title: "That passkey can't make the trip",
+    paras: [
+      "Windows Hello passkeys may live only on the one computer where they were made. They don't travel through iCloud Keychain or Google Password Manager, so that passkey can't come with you to an iPhone or iPad."
+    ],
+    note: "<strong>Good to know:</strong> the way in from elsewhere is a passkey on your phone — signing in on a computer using your phone and a QR code. A passkey that only lives on the Windows computer can't take that trip."
+  },
+  "windows>android": {
+    verdict: "no", verdictText: "No — it stays on that computer",
+    title: "That passkey can't make the trip",
+    paras: [
+      "Windows Hello passkeys may live only on the one computer where they were made. They don't travel through iCloud Keychain or Google Password Manager, so that passkey can't come with you to an Android phone."
+    ],
+    note: "<strong>Good to know:</strong> the way in from elsewhere is a passkey on your phone — signing in on a computer using your phone and a QR code. A passkey that only lives on the Windows computer can't take that trip."
+  },
+  "windows>windows": {
+    verdict: "yes", verdictText: "Yes — on that same computer",
+    title: "It works where it lives",
+    paras: [
+      "If this is the same Windows computer where the passkey was made, sign in as usual — the passkey lives on that computer.",
+      "If it's a different Windows computer, the passkey may not be there: Windows Hello passkeys may live only on that one computer."
+    ]
+  },
+  "windows>mac": {
+    verdict: "no", verdictText: "No — it stays on that computer",
+    title: "That passkey can't make the trip",
+    paras: [
+      "Windows Hello passkeys may live only on the one computer where they were made. They don't travel through iCloud Keychain or Google Password Manager, so that passkey can't come with you to a Mac."
+    ],
+    note: "<strong>Good to know:</strong> the way in from elsewhere is a passkey on your phone — signing in on a computer using your phone and a QR code. A passkey that only lives on the Windows computer can't take that trip."
+  },
+
+  /* ---- Passkey lives on a security key ---- */
+  "key>apple": {
+    verdict: "yes", verdictText: "Yes — the key is the traveler",
+    title: "Plug it in, or tap it",
+    paras: [
+      "A security key carries its own passkeys — it works wherever you plug it in or tap it. The key itself is the thing that travels, so nothing needs to sync. Plug it into the iPhone or iPad, or tap it, and approve."
+    ]
+  },
+  "key>android": {
+    verdict: "yes", verdictText: "Yes — the key is the traveler",
+    title: "Plug it in, or tap it",
+    paras: [
+      "A security key carries its own passkeys — it works wherever you plug it in or tap it. The key itself is the thing that travels, so nothing needs to sync. Plug it into the Android phone, or tap it, and approve."
+    ]
+  },
+  "key>windows": {
+    verdict: "yes", verdictText: "Yes — the key is the traveler",
+    title: "Plug it in, or tap it",
+    paras: [
+      "A security key carries its own passkeys — it works wherever you plug it in or tap it. The key itself is the thing that travels, so nothing needs to sync. Plug it into the Windows computer, or tap it, and approve."
+    ]
+  },
+  "key>mac": {
+    verdict: "yes", verdictText: "Yes — the key is the traveler",
+    title: "Plug it in, or tap it",
+    paras: [
+      "A security key carries its own passkeys — it works wherever you plug it in or tap it. The key itself is the thing that travels, so nothing needs to sync. Plug it into the Mac, or tap it, and approve."
+    ]
+  }
+};
+
+var currentSource = null;
+var currentTarget = null;
+
+function el(id){ return document.getElementById(id); }
+
+function fillSelect(sel, items){
+  sel.innerHTML = '';
+  var ph = document.createElement('option');
+  ph.value = ''; ph.textContent = 'Choose…';
+  sel.appendChild(ph);
+  Object.keys(items).forEach(function(key){
+    var o = document.createElement('option');
+    o.value = key; o.textContent = items[key].label;
+    sel.appendChild(o);
+  });
+  sel.value = '';
+}
+
+function onSourceChange(){
+  var v = el('sourceSelect').value;
+  currentSource = v ? v : null;
+  currentTarget = null;
+  el('targetSelect').value = '';
+  el('result').classList.add('hidden');
+  if(currentSource){
+    el('targetBlock').classList.remove('hidden');
+    el('targetBlock').scrollIntoView({behavior:'smooth', block:'start'});
+  } else {
+    el('targetBlock').classList.add('hidden');
+  }
+}
+
+function onTargetChange(){
+  var v = el('targetSelect').value;
+  currentTarget = v ? v : null;
+  if(currentTarget){ showResult(); }
+  else { el('result').classList.add('hidden'); }
+}
+
+function showResult(){
+  var a = ANSWERS[currentSource + '>' + currentTarget];
+  var r = el('result');
+  var html = '<span class="verdict ' + a.verdict + '">' + a.verdictText + '</span>';
+  html += '<h3>' + a.title + '</h3>';
+  a.paras.forEach(function(p){ html += '<p>' + p + '</p>'; });
+  if(a.note){ html += '<div class="note">' + a.note + '</div>'; }
+  if(a.caution){ html += '<div class="caution">' + a.caution + '</div>'; }
+  html += '<div class="actions"><button class="util" onclick="window.print()">🖨 Print this answer</button>' +
+          '<button class="util" onclick="startOver()">↺ Start over</button></div>';
+  r.innerHTML = html;
+  r.className = 'result';
+  r.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function startOver(){
+  currentSource = null;
+  currentTarget = null;
+  el('sourceSelect').value = '';
+  el('targetSelect').value = '';
+  el('targetBlock').classList.add('hidden');
+  el('result').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+fillSelect(el('sourceSelect'), SOURCES);
+fillSelect(el('targetSelect'), TARGETS);
+el('sourceSelect').addEventListener('change', onSourceChange);
+el('targetSelect').addEventListener('change', onTargetChange);
+
+/* "Questions people ask" accordion — one answer open at a time */
+var qaBtns = document.querySelectorAll('.qa-btn');
+qaBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var item = btn.parentElement;
+    var panel = item.querySelector('.qa-panel');
+    var wasOpen = item.classList.contains('open');
+    var openItems = document.querySelectorAll('.qa.open');
+    openItems.forEach(function(o){
+      o.classList.remove('open');
+      o.querySelector('.qa-panel').classList.add('hidden');
+      o.querySelector('.qa-btn').setAttribute('aria-expanded', 'false');
+    });
+    if(!wasOpen){
+      item.classList.add('open');
+      panel.classList.remove('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+</script>
+</body>
+</html>

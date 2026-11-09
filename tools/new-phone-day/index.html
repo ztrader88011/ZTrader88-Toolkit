@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Phone Day — Move Your Authenticator Codes Without Locking Yourself Out | ztrader88</title>
+<meta name="description" content="Got a new phone? Your authenticator codes do not move by themselves. Pick your app, tell us if the old phone still works, and follow the safe order — step by step. Free tool from ztrader88.">
+<style>
+  :root{
+    --navy:#0a1c36; --navy2:#10294e; --gold:#d4af37; --gold-soft:#f3e3ac;
+    --paper:#fbf8f1; --ink:#1c2430; --muted:#5a6572; --warn-bg:#fdf3e3; --warn-line:#d4af37;
+    --ok:#1d6b4f; --brick:#a4442e;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{font-size:19px;}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.55;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
+  }
+  /* Highly transparent avatar watermark — brand presence, never in the way */
+  .watermark{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .watermark span{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:78vmin; line-height:1; color:var(--navy); opacity:.045;
+    transform:rotate(-12deg); user-select:none;
+  }
+  .wrap{position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 18px 40px;}
+  header{
+    background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff; padding:30px 18px 26px; text-align:center; position:relative; z-index:1;
+    border-bottom:4px solid var(--gold);
+  }
+  .brand{
+    font-size:.78rem; letter-spacing:.32em; text-transform:uppercase; color:var(--gold);
+    font-weight:700;
+  }
+  header h1{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:2.1rem; line-height:1.15; margin:10px 0 8px;
+  }
+  header p{color:#dbe4f0; font-size:1.02rem; max-width:560px; margin:0 auto;}
+  header p.nodata{color:var(--gold-soft); font-size:.93rem; margin:12px auto 0;}
+  .rule{
+    background:#fbeaea; border:2px solid var(--brick); border-radius:14px;
+    padding:16px 18px; margin:22px 0 4px; color:var(--ink);
+  }
+  .rule strong{color:var(--brick);}
+  .step-label{
+    margin:24px 0 10px; font-size:.8rem; font-weight:700; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .step-label .n{color:#b8912a;}
+  .pickcard{
+    background:#fff; border:2px solid #d9d2ba; border-radius:14px; padding:18px; margin-bottom:6px;
+  }
+  .pickcard h2.q{font-family:Georgia,serif; font-size:1.2rem; color:var(--navy); line-height:1.35; margin-bottom:12px;}
+  select.pick{
+    width:100%; min-height:58px;
+    border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:12px; padding:12px; font-size:1.05rem; font-weight:700;
+    cursor:pointer; font-family:inherit;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  select.pick:hover{background:var(--gold-soft);}
+  select.pick:focus{outline:3px solid var(--gold-soft); border-color:var(--gold);}
+  select.pick.chosen{background:#eef4ee; border-color:var(--ok); color:var(--ok);}
+  .hidden{display:none !important;}
+  .path{
+    background:#fff; border:2px solid var(--navy); border-radius:16px;
+    padding:22px 20px; margin-top:22px; box-shadow:0 6px 24px rgba(10,28,54,.08);
+    border-top:8px solid var(--gold);
+  }
+  .path h3{font-family:Georgia,serif; font-size:1.4rem; color:var(--navy); margin-bottom:6px; line-height:1.25;}
+  .path p.sub{color:var(--muted); margin-bottom:14px;}
+  ol.steps{list-style:none; counter-reset:step;}
+  ol.steps li{
+    counter-increment:step; position:relative; padding:10px 0 10px 52px; border-top:1px solid #eee5cd;
+  }
+  ol.steps li:first-child{border-top:none;}
+  ol.steps li::before{
+    content:counter(step); position:absolute; left:0; top:8px;
+    background:var(--navy); color:#fff; font-weight:800; border-radius:999px;
+    min-width:36px; height:36px; line-height:36px; text-align:center; font-size:.95rem;
+  }
+  ol.steps li strong{color:var(--navy);}
+  .finish{
+    background:#eef4ee; border-left:5px solid var(--ok); border-radius:8px;
+    padding:12px 14px; margin-top:16px; font-size:.97rem;
+  }
+  .lesson{
+    background:var(--warn-bg); border-left:5px solid var(--warn-line); border-radius:8px;
+    padding:12px 14px; margin-top:14px; font-size:.97rem;
+  }
+  .lesson a{color:var(--navy); font-weight:700;}
+  .actions{margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;}
+  button.util{
+    appearance:none; border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:10px; padding:11px 16px; font-size:.95rem; font-weight:700; cursor:pointer;
+  }
+  button.util:hover{background:var(--gold-soft);}
+  footer{
+    margin-top:40px; border-top:2px solid var(--gold); padding-top:18px;
+    text-align:center; color:var(--muted); font-size:.92rem;
+  }
+  footer .pointers{margin-bottom:12px; font-size:1rem;}
+  footer .pointers a{color:var(--navy); font-weight:700; text-decoration:none; margin:0 8px; white-space:nowrap;}
+  footer .pointers a:hover{text-decoration:underline;}
+  footer .freenote{
+    background:#fff; border:1px solid #e4ddc8; border-radius:12px; padding:14px 16px;
+    color:var(--ink); max-width:560px; margin:0 auto 12px;
+  }
+  @media print{
+    .watermark, .actions, select.pick{display:none !important;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<div class="watermark" aria-hidden="true"><span>Z</span></div>
+
+<header>
+  <div class="brand">ztrader88</div>
+  <h1>New Phone Day</h1>
+  <p>New phone, empty authenticator app? Your codes live on the old phone — they do not move by themselves. Answer two questions and we’ll walk you through the safe order, for your app.</p>
+  <p class="nodata">No personal information required. Nothing you choose here is stored or sent anywhere.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="rule">
+    <strong>The one rule, before anything else:</strong> do not wipe, sell, or trade in the old phone until the new phone is signing you in. The old phone is the key to the whole move.
+  </div>
+
+  <p class="step-label"><span class="n">Question 1</span> of 2</p>
+  <div class="pickcard">
+    <h2 class="q">Which authenticator app do you use?</h2>
+    <select class="pick" id="appPick" aria-label="Which authenticator app do you use?">
+      <option value="">Choose…</option>
+      <option value="google">Google Authenticator</option>
+      <option value="microsoft">Microsoft Authenticator</option>
+      <option value="authy">Authy</option>
+    </select>
+  </div>
+
+  <p class="step-label"><span class="n">Question 2</span> of 2</p>
+  <div class="pickcard">
+    <h2 class="q">Does your old phone still work?</h2>
+    <select class="pick" id="oldPick" aria-label="Does your old phone still work?">
+      <option value="">Choose…</option>
+      <option value="works">Yes — I have it and it turns on</option>
+      <option value="gone">No — it’s gone, broken, or already wiped</option>
+    </select>
+  </div>
+
+  <div id="path" class="hidden"></div>
+
+  <footer>
+    <div class="pointers">
+      <a href="https://www.youtube.com/@ztrader880" target="_blank" rel="noopener">▶ YouTube — @ztrader880</a>
+      <a href="https://github.com/ztrader88011/ZTrader88-Toolkit" target="_blank" rel="noopener">🧰 Our free tools</a>
+      <a href="https://gist.github.com/ztrader88011/c515828065a773ff1da85a6cc2e070a8" target="_blank" rel="noopener">📄 Locked out? The official way back in</a>
+      <a href="https://www.facebook.com/ztrader88" target="_blank" rel="noopener">📘 Facebook — ztrader88</a>
+    </div>
+    <div class="freenote">
+      These tools are free — no catch. If one helped you, please support us by liking, sharing, and subscribing, on whichever platform you found us. That’s what keeps the lessons coming.
+    </div>
+    <p>ztrader88 — tech news and safety lessons in plain English. No jargon, no hype.<br>
+    This tool collects nothing — no account, no data, ever.</p>
+  </footer>
+
+</div>
+
+<script>
+var LESSON = '<div class="lesson">🎬 <strong>Watch it done:</strong> <a href="https://www.youtube.com/watch?v=GcvvZKrKmTA" target="_blank" rel="noopener">Kraken 2FA Not Working? How to Get Back Into Your Account</a> — our rescue lesson walks through getting back in when the codes stop working.</div>';
+
+var PATHS = {
+  "google-works": {
+    title: "Google Authenticator — and the old phone still works",
+    sub: "This is the easy road. Ten minutes, in this order.",
+    steps: [
+      "<strong>Keep the old phone charged and nearby.</strong> Nothing gets wiped today until the very last step says so.",
+      "<strong>Install Google Authenticator on the new phone</strong> and sign in with your Google Account. If you were signed in on the old phone, your codes sync to the new phone by themselves — Google’s own help page says signing in means “your codes are automatically synced to this device.”",
+      "<strong>Not signed in on the old phone?</strong> Then move the codes by hand: on the OLD phone, open the app’s menu and choose <strong>Transfer accounts → Export</strong>, then scan that code with the new phone. Google lists the old phone as required for this — it cannot be done without it.",
+      "<strong>Prove it before you trust it:</strong> sign in to one important account using a code from the NEW phone. If it lets you in, the move worked.",
+      "<strong>Only now</strong> is the old phone free to be wiped or traded in."
+    ],
+    finish: "<strong>Finish the job:</strong> stay signed in to the app so your codes keep syncing, and save the backup codes your important accounts gave you somewhere that is not a phone — paper in a drawer beats a photo on the device itself."
+  },
+  "google-gone": {
+    title: "Google Authenticator — and the old phone is gone",
+    sub: "Slower, but there is a way back. It runs account by account.",
+    steps: [
+      "<strong>First, try the sync.</strong> Install Google Authenticator on the new phone and sign in with your Google Account. If your codes were synced to your account, they come back on their own.",
+      "<strong>Nothing there?</strong> Then the codes were only ever on the old phone. In Google’s own words: if your codes aren’t synced, “you need to visit every site that you have Google Authenticator set up on to remove the codes, and then relink your new device.” There is no copy anywhere else.",
+      "<strong>Start with your email.</strong> Your email is the master key — nearly every other account resets through it — so win that one back first, then work down your list.",
+      "<strong>At each site:</strong> sign in, look for “lost my authenticator” or “try another way,” prove it’s you with whatever that site accepts, then link the new phone’s app fresh.",
+      "<strong>Nobody can shortcut this.</strong> There is no Google phone line that restores codes, and anyone charging to recover them can’t. The official pages are the only door — and they are free."
+    ],
+    finish: "<strong>So this never happens again:</strong> sign in to the app on the new phone so your codes sync to your account, and save each account’s backup codes somewhere that is not a phone."
+  },
+  "microsoft-works": {
+    title: "Microsoft Authenticator — and the old phone still works",
+    sub: "One switch on the old phone does all the heavy lifting.",
+    steps: [
+      "<strong>On the OLD phone, turn the backup ON.</strong> Open Microsoft Authenticator → Settings → switch on <strong>Cloud Backup</strong>. On Android the backup is stored with your Microsoft account; on iPhone it lives in iCloud. Backup is a choice, not automatic — if this switch was never on, your codes were never copied anywhere.",
+      "<strong>Stay in the same family of phone.</strong> Microsoft is plain about this: “You can only back up and restore on the same device type” — a backup made on an iPhone cannot be restored on an Android, or the other way round.",
+      "<strong>On the NEW phone:</strong> install Microsoft Authenticator and choose <strong>Begin recovery</strong>, then sign in with the same account you backed up to. Your saved codes and account names come across.",
+      "<strong>Expect a few “sign in to restore” accounts.</strong> Some accounts come back with a note to sign in again and confirm it’s you by email or phone before the code works. That’s normal — finish those, one by one.",
+      "<strong>Know what backup does not carry:</strong> passwordless sign-in setups and work or school accounts come back as names only — you sign in and set those up again on the new phone.",
+      "<strong>Prove it, then wipe:</strong> sign in somewhere with a code from the NEW phone first. Only then is the old phone free to go."
+    ],
+    finish: "<strong>Finish the job:</strong> leave Cloud Backup switched on in the new phone’s app, and save the backup codes your important accounts gave you somewhere that is not a phone."
+  },
+  "microsoft-gone": {
+    title: "Microsoft Authenticator — and the old phone is gone",
+    sub: "Everything now depends on one question: was the backup ever switched on?",
+    steps: [
+      "<strong>If Cloud Backup was ON:</strong> install Microsoft Authenticator on the new phone, choose <strong>Begin recovery</strong>, and sign in with the account you backed up to. Your codes come back — as long as the new phone is the same type (iPhone to iPhone, Android to Android). Backups cannot cross between the two.",
+      "<strong>Some accounts will ask you to sign in again</strong> after the restore and confirm it’s you by email or phone before they work. That is the normal finish line, not a failure.",
+      "<strong>If the backup was never switched on:</strong> the codes lived only on the old phone, and they are gone with it. Each account must be recovered through its own official sign-in and recovery pages — start with your email, because nearly everything else resets through it.",
+      "<strong>Nobody can shortcut this.</strong> No support line and no paid service can bring the codes back. The official recovery pages are the only door — and they are free."
+    ],
+    finish: "<strong>So this never happens again:</strong> the day you set the app up on the new phone, turn Cloud Backup ON — and save each account’s backup codes somewhere that is not a phone."
+  },
+  "authy-works": {
+    title: "Authy — and the old phone still works",
+    sub: "Authy’s trick is letting two devices share the same codes — briefly.",
+    steps: [
+      "<strong>On the OLD phone, open Authy → Settings → Devices</strong> and turn on <strong>Allow Multi-device</strong>. Twilio (Authy’s maker) recommends switching this on only long enough to add your new device, then switching it back off.",
+      "<strong>Install Authy on the new phone</strong> and add it as a device. Your accounts come across and stay in step on both phones.",
+      "<strong>If you use Authy’s backups, have your backups password ready.</strong> Your tokens travel encrypted with that password — and the password is never sent to or stored on Authy’s servers, so nobody there can remind you of it. Lose it, and backed-up tokens cannot be unlocked.",
+      "<strong>Prove it:</strong> sign in somewhere with a code from the NEW phone. Then turn <strong>Allow Multi-device</strong> back OFF on the old phone, and only then wipe it."
+    ],
+    finish: "<strong>Finish the job:</strong> keep backups on, keep your backups password somewhere safe that is not a phone, and leave multi-device off unless you are adding a device."
+  },
+  "authy-gone": {
+    title: "Authy — and the old phone is gone",
+    sub: "Authy makes you wait — on purpose. Here is the honest order.",
+    steps: [
+      "<strong>If backups were ON and you know your backups password:</strong> install Authy on the new phone and sign in. Your backed-up tokens unlock with that password — it is never stored on Authy’s servers, so you are the only copy.",
+      "<strong>If multi-device was off and no working device remains,</strong> Authy requires account recovery — and Twilio states it “takes exactly 24 hours and cannot be accelerated or bypassed by support.” Anyone promising to speed it up can’t.",
+      "<strong>Know the limits before you start:</strong> recovery does not reset a forgotten backups password, and it does not bring back tokens that were never backed up. Those accounts are recovered one by one at each service’s own pages — email first, because everything else resets through it.",
+      "<strong>Nobody can shortcut this.</strong> No paid service can open the 24-hour wait or restore codes that were never backed up."
+    ],
+    finish: "<strong>So this never happens again:</strong> on the new phone, turn backups ON, write the backups password down somewhere safe, and consider leaving one trusted second device linked."
+  }
+};
+
+function el(id){ return document.getElementById(id); }
+
+function showPath(){
+  var app = el('appPick').value;
+  var old = el('oldPick').value;
+  el('appPick').classList.toggle('chosen', !!app);
+  el('oldPick').classList.toggle('chosen', !!old);
+  var box = el('path');
+  if(!app || !old){ box.classList.add('hidden'); box.innerHTML=''; return; }
+  var p = PATHS[app + '-' + old];
+  var html = '<h3>' + p.title + '</h3><p class="sub">' + p.sub + '</p><ol class="steps">';
+  p.steps.forEach(function(s){ html += '<li>' + s + '</li>'; });
+  html += '</ol><div class="finish">' + p.finish + '</div>' + LESSON;
+  html += '<div class="actions"><button class="util" onclick="window.print()">🖨 Print my steps</button>' +
+          '<button class="util" onclick="startOver()">↺ Start over</button></div>';
+  box.innerHTML = html;
+  box.className = 'path';
+  box.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function startOver(){
+  el('appPick').value = '';
+  el('oldPick').value = '';
+  el('path').classList.add('hidden');
+  el('path').innerHTML = '';
+  el('appPick').classList.remove('chosen');
+  el('oldPick').classList.remove('chosen');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+el('appPick').onchange = showPath;
+el('oldPick').onchange = showPath;
+</script>
+</body>
+</html>

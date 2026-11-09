@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Receipt Test — Can They Show the Receipts? | ztrader88</title>
+<meta name="description" content="Someone is holding your money — an exchange, an app, a platform. Run the Receipt Test: eight plain questions that tell you whether they can show the receipts, or whether you're just taking their word for it. Free tool from ztrader88.">
+<style>
+  :root{
+    --navy:#0b1e3a; --navy2:#12294d; --gold:#d4af37; --gold-soft:#f3e3ac;
+    --paper:#fdfaf2; --ink:#1c2430; --muted:#5a6572; --warn-bg:#fdf3e3; --warn-line:#d4af37;
+    --ok:#1d6b4f; --brick:#a4442e;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{font-size:19px;}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.55;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
+  }
+  /* Highly transparent avatar watermark — brand presence, never in the way */
+  .watermark{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .watermark span{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:78vmin; line-height:1; color:var(--navy); opacity:.045;
+    transform:rotate(-12deg); user-select:none;
+  }
+  .wrap{position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 18px 40px;}
+  header{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff; padding:30px 18px 26px; text-align:center; position:relative; z-index:1;
+    border-bottom:4px solid var(--gold);
+  }
+  .brand{
+    font-size:.78rem; letter-spacing:.32em; text-transform:uppercase; color:var(--gold);
+    font-weight:700;
+  }
+  header h1{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:2.15rem; line-height:1.15; margin:10px 0 8px;
+  }
+  header p{color:#dbe4f0; font-size:1.02rem; max-width:560px; margin:0 auto;}
+  header p.nodata{color:var(--gold-soft); font-size:.93rem; margin:12px auto 0;}
+  .namecard{
+    background:#fff; border:2px solid var(--navy); border-radius:14px;
+    padding:18px; margin:22px 0 6px;
+  }
+  .namecard label{display:block; font-family:Georgia,serif; font-size:1.12rem; color:var(--navy); margin-bottom:10px;}
+  .namecard input{
+    width:100%; font-size:1.08rem; padding:13px 14px; border:2px solid var(--navy);
+    border-radius:10px; color:var(--ink); background:#fff;
+  }
+  .namecard input:focus{outline:3px solid var(--gold-soft); border-color:var(--gold);}
+  .namecard .privacy{font-size:.86rem; color:var(--muted); margin-top:8px;}
+  .howto{margin:18px 0 4px;}
+  .step-label{
+    margin:22px 0 10px; font-size:.8rem; font-weight:700; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .qcard{
+    background:#fff; border:2px solid #d9d2ba; border-radius:14px;
+    padding:18px; margin-bottom:14px;
+  }
+  .qcard.answered{border-color:var(--navy);}
+  .qnum{
+    display:inline-block; background:var(--navy); color:#fff; font-weight:800;
+    border-radius:999px; min-width:34px; height:34px; line-height:34px;
+    text-align:center; font-size:.95rem; margin-bottom:8px;
+  }
+  .qtext{font-family:Georgia,serif; font-size:1.18rem; color:var(--navy); line-height:1.35;}
+  .qsub{color:var(--muted); font-size:.94rem; margin-top:4px;}
+  .answers{margin-top:14px;}
+  select.ans{
+    width:100%; min-height:58px;
+    border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:12px; padding:12px; font-size:1.05rem; font-weight:700;
+    cursor:pointer; font-family:inherit;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  select.ans:hover{background:var(--gold-soft);}
+  select.ans:focus{outline:3px solid var(--gold-soft); border-color:var(--gold);}
+  select.ans.sel-yes{background:#eef4ee; border-color:var(--ok); color:var(--ok);}
+  select.ans.sel-unsure{background:var(--warn-bg); border-color:var(--gold); color:var(--navy);}
+  select.ans.sel-no{background:#fbeaea; border-color:var(--brick); color:var(--brick);}
+  .progress{
+    text-align:center; font-weight:700; color:var(--navy); margin:20px 0 10px; font-size:1.02rem;
+  }
+  button.verdict-btn{
+    appearance:none; display:block; width:100%; text-align:center;
+    background:var(--gold); color:var(--navy); font-weight:800; font-size:1.15rem;
+    border-radius:12px; padding:17px 14px; border:2px solid var(--navy); cursor:pointer;
+  }
+  button.verdict-btn:hover:not(:disabled){background:var(--gold-soft);}
+  button.verdict-btn:disabled{opacity:.45; cursor:not-allowed;}
+  .hidden{display:none !important;}
+  .result{
+    background:#fff; border:2px solid var(--navy); border-radius:16px;
+    padding:22px 20px; margin-top:20px; box-shadow:0 6px 24px rgba(11,30,58,.08);
+  }
+  .result.t1{border-top:8px solid var(--ok);}
+  .result.t2{border-top:8px solid var(--gold);}
+  .result.t3{border-top:8px solid var(--brick);}
+  .result .score{color:var(--muted); font-size:.92rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;}
+  .result h3{font-family:Georgia,serif; font-size:1.45rem; color:var(--navy); margin:4px 0 10px; line-height:1.25;}
+  .result p.body{margin-bottom:12px;}
+  .openqs{
+    background:#eef4ee; border-left:5px solid var(--ok); border-radius:8px;
+    padding:12px 14px; margin-top:6px; font-size:.97rem;
+  }
+  .result.t2 .openqs, .result.t3 .openqs{background:var(--warn-bg); border-left-color:var(--warn-line);}
+  .locked{
+    background:var(--warn-bg); border-left:5px solid var(--warn-line); border-radius:8px;
+    padding:12px 14px; margin-top:14px; font-size:.97rem;
+  }
+  .actions{margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;}
+  button.util{
+    appearance:none; border:2px solid var(--navy); background:#fff; color:var(--navy);
+    border-radius:10px; padding:11px 16px; font-size:.95rem; font-weight:700; cursor:pointer;
+  }
+  button.util:hover{background:var(--gold-soft);}
+  footer{
+    margin-top:40px; border-top:2px solid var(--gold); padding-top:18px;
+    text-align:center; color:var(--muted); font-size:.92rem;
+  }
+  footer .pointers{margin-bottom:12px; font-size:1rem;}
+  footer .pointers a{color:var(--navy); font-weight:700; text-decoration:none; margin:0 8px; white-space:nowrap;}
+  footer .pointers a:hover{text-decoration:underline;}
+  footer .freenote{
+    background:#fff; border:1px solid #e4ddc8; border-radius:12px; padding:14px 16px;
+    color:var(--ink); max-width:560px; margin:0 auto 12px;
+  }
+  @media print{
+    .watermark, .actions, select.ans, button.verdict-btn, .namecard input{display:none !important;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<div class="watermark" aria-hidden="true"><span>Z</span></div>
+
+<header>
+  <div class="brand">ztrader88</div>
+  <h1>The Receipt Test</h1>
+  <p>Someone is holding your money — an exchange, an app, a platform. Run the Receipt Test on them: eight plain questions that tell you whether they can actually show the receipts, or whether you’re just taking their word for it.</p>
+  <p class="nodata">No personal information required. We don’t collect any data — nothing you type or choose here is stored or sent anywhere.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="namecard">
+    <label for="holderName">Who’s holding your money? Keep them in mind — or type their name here:</label>
+    <input type="text" id="holderName" placeholder="e.g. Binance" autocomplete="off" maxlength="60">
+    <p class="privacy">Optional — the name only personalizes your verdict.</p>
+  </div>
+
+  <p class="howto">Answer all eight questions about them, as honestly as you can. <strong>“Not sure” is a real answer</strong> — if you don’t know, that itself is worth knowing.</p>
+
+  <p class="step-label">The eight questions</p>
+  <div id="questions"></div>
+
+  <p class="progress" id="progress">You’ve answered 0 of 8</p>
+  <button class="verdict-btn" id="verdictBtn" disabled>See my verdict</button>
+
+  <div id="verdict" class="hidden"></div>
+
+  <footer>
+    <div class="pointers">
+      <a href="https://www.youtube.com/@ztrader880" target="_blank" rel="noopener">▶ YouTube — @ztrader880</a>
+      <a href="https://gist.github.com/ztrader88011/c515828065a773ff1da85a6cc2e070a8" target="_blank" rel="noopener">📄 Our free guides</a>
+      <a href="https://www.facebook.com/ztrader88" target="_blank" rel="noopener">📘 Facebook — ztrader88</a>
+    </div>
+    <div class="freenote">
+      These tools are free — no catch. If one helped you, the best way to support us costs nothing: like, share, and subscribe, on whichever platform you found us. That’s what keeps the lessons coming.
+    </div>
+    <p>ztrader88 — tech news and safety lessons in plain English. No jargon, no hype.<br>
+    This tool collects nothing — the name you type and the answers you give never leave this page.</p>
+  </footer>
+
+</div>
+
+<script>
+var QUESTIONS = [
+  { text: "Do they publish a proof of reserves — a public statement of what they hold — that anyone can read?" },
+  { text: "Is it recent — from the last three months, not last year?" },
+  { text: "Does it show what they OWE people like you, as well as what they hold?",
+    sub: "Assets without debts is half a receipt." },
+  { text: "Has an outside accounting firm checked it — or is it only their own say-so?" },
+  { text: "Can you check that YOUR OWN balance is counted in it?" },
+  { text: "Can you take your money out to your own wallet today, in full, without asking permission?" },
+  { text: "Do they keep customers’ money separate from the company’s own money?",
+    sub: "This is the lesson of FTX, where the two were mixed." },
+  { text: "Are they licensed or registered where you live?" }
+];
+
+var OPTIONS = [
+  { key: "yes",   label: "Yes",      value: 2, cls: "sel-yes" },
+  { key: "unsure", label: "Not sure", value: 1, cls: "sel-unsure" },
+  { key: "no",    label: "No",       value: 0, cls: "sel-no" }
+];
+
+var LOCKED_LINE = "Remember: a proof of reserves is a snapshot in time, not an audit. It shows what was there on one day — the habit of showing it, fresh and checked by outsiders, is the real sign.";
+
+var answers = QUESTIONS.map(function(){ return null; });
+
+function el(id){ return document.getElementById(id); }
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, function(c){
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+  });
+}
+
+function renderQuestions(){
+  var box = el('questions'); box.innerHTML = '';
+  QUESTIONS.forEach(function(q, qi){
+    var card = document.createElement('div');
+    card.className = 'qcard' + (answers[qi] !== null ? ' answered' : '');
+    card.id = 'qcard-' + qi;
+
+    var num = document.createElement('div');
+    num.className = 'qnum'; num.textContent = (qi + 1);
+    card.appendChild(num);
+
+    var qt = document.createElement('div');
+    qt.className = 'qtext'; qt.textContent = q.text;
+    card.appendChild(qt);
+
+    if(q.sub){
+      var qs = document.createElement('div');
+      qs.className = 'qsub'; qs.textContent = q.sub;
+      card.appendChild(qs);
+    }
+
+    var row = document.createElement('div');
+    row.className = 'answers';
+    var sel = document.createElement('select');
+    sel.className = 'ans';
+    sel.id = 'qsel-' + qi;
+    sel.setAttribute('aria-label', 'Answer to question ' + (qi + 1));
+    var ph = document.createElement('option');
+    ph.value = ''; ph.textContent = 'Choose…';
+    sel.appendChild(ph);
+    OPTIONS.forEach(function(opt){
+      var o = document.createElement('option');
+      o.value = opt.value; o.textContent = opt.label;
+      sel.appendChild(o);
+    });
+    sel.value = answers[qi] === null ? '' : String(answers[qi]);
+    if(answers[qi] !== null){
+      OPTIONS.forEach(function(opt){
+        if(opt.value === answers[qi]){ sel.classList.add(opt.cls); }
+      });
+    }
+    sel.onchange = function(){
+      pickAnswer(qi, sel.value === '' ? null : parseInt(sel.value, 10));
+    };
+    row.appendChild(sel);
+    card.appendChild(row);
+    box.appendChild(card);
+  });
+}
+
+function pickAnswer(qi, value){
+  answers[qi] = value;
+  renderQuestions();
+  updateProgress();
+  /* If the verdict was showing, the answers changed — hide it so it can be re-run honestly */
+  if(!el('verdict').classList.contains('hidden')){
+    el('verdict').classList.add('hidden');
+    el('verdictBtn').textContent = 'See my verdict again';
+  }
+}
+
+function answeredCount(){
+  return answers.filter(function(a){ return a !== null; }).length;
+}
+
+function updateProgress(){
+  var n = answeredCount();
+  el('progress').textContent = 'You’ve answered ' + n + ' of ' + QUESTIONS.length;
+  el('verdictBtn').disabled = (n !== QUESTIONS.length);
+}
+
+function holderName(){
+  var v = el('holderName').value.trim();
+  return v ? escapeHtml(v) : '';
+}
+
+function showVerdict(){
+  var score = answers.reduce(function(sum, a){ return sum + a; }, 0);
+  var name = holderName();
+  var open = [];
+  answers.forEach(function(a, i){ if(a < 2){ open.push(i + 1); } });
+
+  var tier, title, body;
+  if(score >= 13){
+    tier = 't1';
+    title = name ? name + ' shows the receipts.' : 'Shows the receipts.';
+    body = 'They can prove what’s holding your money up. Keep checking now and then; a receipt is a snapshot, not a promise.';
+  } else if(score >= 8){
+    tier = 't2';
+    title = name ? name + ' shows some of the paper.' : 'Shows some of the paper.';
+    body = 'Some proof, with gaps. The questions you answered No or Not sure are exactly the ones to ask them — or to ask us in the comments.';
+  } else {
+    tier = 't3';
+    title = name ? name + ': no receipts — it’s their word against your money.'
+                 : 'No receipts — it’s their word against your money.';
+    body = 'Nothing here proves they hold what they say. Consider keeping only what you need there, and the rest where YOU hold the keys.';
+  }
+
+  var html = '<p class="score">Your score: ' + score + ' of 16</p>';
+  html += '<h3>' + title + '</h3>';
+  html += '<p class="body">' + body + '</p>';
+  if(open.length){
+    html += '<div class="openqs"><strong>Your open questions: ' + open.join(', ') + '</strong> — the ones you answered No or Not sure. Those are the questions worth asking' + (name ? ' ' + name : ' them') + ' directly.</div>';
+  } else {
+    html += '<div class="openqs"><strong>No open questions</strong> — you answered Yes to all eight.</div>';
+  }
+  html += '<div class="locked"><strong>' + LOCKED_LINE.split(':')[0] + ':</strong>' + LOCKED_LINE.slice(LOCKED_LINE.indexOf(':') + 1) + '</div>';
+  html += '<div class="actions"><button class="util" onclick="window.print()">🖨 Print my result</button>' +
+          '<button class="util" onclick="startOver()">↺ Start over</button></div>';
+
+  var v = el('verdict');
+  v.className = 'result ' + tier;
+  v.innerHTML = html;
+  v.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function startOver(){
+  answers = QUESTIONS.map(function(){ return null; });
+  el('verdict').classList.add('hidden');
+  el('verdict').className = 'hidden';
+  el('verdictBtn').textContent = 'See my verdict';
+  renderQuestions();
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+el('verdictBtn').onclick = showVerdict;
+renderQuestions();
+updateProgress();
+</script>
+</body>
+</html>
