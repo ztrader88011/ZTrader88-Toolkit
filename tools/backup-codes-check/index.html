@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>If Your Phone Died Tonight — The Backup-Codes Check | ztrader88</title>
+<meta name="description" content="A two-minute self-test, done before a crisis: do you have backup codes, a second way in, and a copy somewhere safe? Answer five plain questions and get your gap list — with the official setup door for each gap. Free, private, nothing collected.">
+<style>
+  :root{
+    --navy:#0b1e3a; --navy2:#12294d; --gold:#d4af37; --gold-soft:#f3e3ac;
+    --paper:#fdfaf2; --ink:#1c2430; --muted:#5a6572; --warn-bg:#fdf3e3; --warn-line:#d4af37;
+    --ok:#1d6b4f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{font-size:19px;}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.55;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
+  }
+  /* Highly transparent avatar watermark — brand presence, never in the way */
+  .watermark{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .watermark span{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:78vmin; line-height:1; color:var(--navy); opacity:.045;
+    transform:rotate(-12deg); user-select:none;
+  }
+  .wrap{position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 18px 40px;}
+  header{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff; padding:30px 18px 26px; text-align:center; position:relative; z-index:1;
+    border-bottom:4px solid var(--gold);
+  }
+  .brand{
+    font-size:.78rem; letter-spacing:.32em; text-transform:uppercase; color:var(--gold);
+    font-weight:700;
+  }
+  header h1{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:2.15rem; line-height:1.15; margin:10px 0 8px;
+  }
+  header p{color:#dbe4f0; font-size:1.02rem; max-width:540px; margin:0 auto;}
+  header p.nodata{color:var(--gold-soft); font-size:.93rem; margin:12px auto 0;}
+  .frame{
+    background:var(--warn-bg); border:1px solid var(--warn-line); border-left:5px solid var(--gold);
+    border-radius:10px; padding:14px 16px; margin-top:24px; font-size:.98rem;
+  }
+  .frame strong{color:var(--navy);}
+  .step-label{
+    margin:26px 0 10px; font-size:.8rem; font-weight:700; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .step-label .n{color:var(--gold);}
+  h2.q{font-family:Georgia,serif; font-size:1.45rem; color:var(--navy); margin-bottom:14px;}
+  .checkitem{
+    background:#fff; border:2px solid #e4ddc8; border-radius:14px;
+    padding:16px; margin-bottom:12px;
+  }
+  .checkitem .ask{font-weight:700; color:var(--navy); font-size:1.05rem; margin-bottom:4px;}
+  .checkitem .why{color:var(--muted); font-size:.93rem; margin-bottom:12px;}
+  .yn{display:flex; gap:10px;}
+  .yn button{
+    flex:1; min-height:52px; border:2px solid var(--navy); border-radius:12px;
+    background:#fff; color:var(--navy); font-size:1rem; font-weight:700;
+    cursor:pointer; font-family:inherit;
+  }
+  .yn button:hover{background:var(--gold-soft);}
+  .yn button:focus{outline:3px solid var(--gold-soft); outline-offset:2px;}
+  .yn button.sel-yes{background:var(--ok); border-color:var(--ok); color:#fff;}
+  .yn button.sel-no{background:#8c2f2f; border-color:#8c2f2f; color:#fff;}
+  .hidden{display:none !important;}
+  .result{
+    background:#fff; border:2px solid var(--navy); border-radius:16px;
+    padding:22px 20px; margin-top:6px; box-shadow:0 6px 24px rgba(11,30,58,.08);
+  }
+  .result h3{font-family:Georgia,serif; color:var(--navy); font-size:1.3rem; margin-bottom:10px;}
+  .result p{margin-bottom:10px;}
+  .gap{
+    border:1px solid #e4ddc8; border-left:5px solid #8c2f2f; border-radius:10px;
+    padding:12px 14px; margin-bottom:10px; background:#fffafa;
+  }
+  .gap h4{color:var(--navy); font-size:1rem; margin-bottom:4px;}
+  .gap p{font-size:.95rem; margin-bottom:6px;}
+  .gap a{color:var(--navy); font-weight:700;}
+  .done-item{
+    border-left:5px solid var(--ok); background:#eef4ee; border-radius:8px;
+    padding:8px 12px; margin-bottom:8px; font-size:.95rem;
+  }
+  .recordcard{
+    border:2px solid var(--navy); border-radius:12px; padding:16px;
+    margin-top:18px; background:#fff;
+  }
+  .recordcard h4{
+    font-family:Georgia,serif; color:var(--navy); font-size:1.05rem; margin-bottom:10px;
+  }
+  .recordcard .rline{
+    border-bottom:1px solid #e4ddc8; padding:9px 2px; font-size:.95rem; color:var(--ink);
+    white-space:nowrap; overflow:hidden;
+  }
+  .recordcard .rline:last-child{border-bottom:none;}
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+  button.util{
+    border:2px solid var(--navy); background:#fff; color:var(--navy); border-radius:12px;
+    padding:10px 16px; font-weight:700; cursor:pointer; font-family:inherit; font-size:.95rem;
+  }
+  button.util:hover{background:var(--gold-soft);}
+  section.questions{margin-top:34px;}
+  section.questions h2{font-family:Georgia,serif; color:var(--navy); font-size:1.5rem; margin-bottom:6px;}
+  section.questions .intro{color:var(--muted); margin-bottom:14px;}
+  .qa{
+    background:#fff; border:2px solid #e4ddc8; border-radius:14px; margin-bottom:10px; overflow:hidden;
+  }
+  .qa-btn{
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:16px; font-family:inherit; font-size:1.02rem; font-weight:700; color:var(--navy);
+    position:relative; padding-right:44px;
+  }
+  .qa-btn:focus{outline:3px solid var(--gold-soft); outline-offset:-3px;}
+  .qa-btn .chev{
+    position:absolute; right:16px; top:50%; transform:translateY(-50%);
+    color:#a8851e; font-size:1.15rem; transition:transform .15s ease;
+  }
+  .qa.open .qa-btn .chev{transform:translateY(-50%) rotate(180deg);}
+  .qa-panel{padding:4px 16px 16px; border-top:1px solid #e4ddc8;}
+  .qa-panel p{margin-bottom:10px;}
+  .qa-panel p:last-child{margin-bottom:0;}
+  .qa-panel ol{margin:0 0 10px 1.25em;}
+  .qa-panel li{margin-bottom:6px;}
+  .qa-panel a{color:var(--navy); font-weight:700;}
+  p.builtfrom{margin-top:16px; font-size:.85rem; color:var(--muted); text-align:center;}
+  footer{
+    margin-top:40px; border-top:2px solid var(--gold); padding-top:18px;
+    text-align:center; color:var(--muted); font-size:.92rem;
+  }
+  footer .pointers{margin-bottom:12px; font-size:1rem;}
+  footer .pointers a{color:var(--navy); font-weight:700; text-decoration:none; margin:0 8px; white-space:nowrap;}
+  footer .pointers a:hover{text-decoration:underline;}
+  footer .freenote{
+    background:#fff; border:1px solid #e4ddc8; border-radius:12px; padding:14px 16px;
+    color:var(--ink); max-width:560px; margin:0 auto 12px;
+  }
+  @media print{
+    .watermark, .actions, .yn{display:none !important;}
+    body{background:#fff;}
+    .recordcard{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="watermark" aria-hidden="true"><span>Z</span></div>
+
+<header>
+  <div class="brand">ztrader88</div>
+  <h1>The Backup-Codes Check</h1>
+  <p>If your phone died tonight — do you have backup codes, a second way in, and a copy somewhere safe? A two-minute self-test, done before a crisis. Free from ztrader88.</p>
+  <p class="nodata">No personal information required. We don’t collect any data — nothing you answer here is stored or sent anywhere.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="frame">
+    <strong>What this check is — and what it is not.</strong> It checks <strong>your own spare keys</strong>, set up by <strong>you</strong>, on <strong>your own accounts</strong>, while everything is working. There is nowhere on this page to type a code, a password, or anything else — and there never will be. <strong>Never type your backup codes into any website or tool, including this one.</strong> Codes are written down by hand, on paper, and kept somewhere safe. That is the whole point of doing it now, before the phone dies.
+  </div>
+
+  <p class="step-label"><span class="n">The check</span> — 5 questions</p>
+  <h2 class="q">Answer for how things stand today</h2>
+  <div id="checklist"></div>
+
+  <div id="result" class="hidden"></div>
+
+  <!--
+    SOURCES — every factual claim, door, and step on this page is grounded in
+    these primary sources (November 2026):
+    Google Account Help, "Sign in with backup codes"
+      — https://support.google.com/accounts/answer/1187538
+      (backup codes are one-time codes offered when two-step verification is
+      set up; each one works once; Google advises creating them in case you
+      lose your phone)
+    Microsoft Support, "Back up one-time password codes in Microsoft Authenticator"
+      — https://support.microsoft.com/en-us/authenticator/back-up-your-accounts-in-microsoft-authenticator
+      (Microsoft Authenticator Cloud Backup; Google Authenticator syncs its
+      codes when the app is signed in to a Google Account)
+    The second-way-in framing (a passkey or authenticator app on a second
+    device; synced passkeys follow the account) follows the verified fact
+    base of the Passkey Readiness Check:
+    FIDO Alliance · Google Account Help · Apple Support · Microsoft Support.
+    Door for that check:
+      https://ztrader88011.github.io/ZTrader88-Toolkit/tools/passkey-cross-device/
+    After a lockout with no codes, the official recovery doors are listed by
+    our Door-Finder:
+      https://ztrader88011.github.io/ZTrader88-Toolkit/tools/door-finder/
+  -->
+  <section class="questions">
+    <h2>Questions people ask</h2>
+    <p class="intro">Tap a question — the answer opens right under it.</p>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">What are backup codes?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>When you turn on two-step verification — the extra step after your password, usually a code sent to or made on your phone — most services offer you a small set of <strong>backup codes</strong>. Each code is a spare key: it signs you in once, on its own, when your usual way in is not there. Each one works <strong>once</strong>, then it is used up.</p>
+        <p>Google puts the reason in one line: create your backup codes <strong>in case you lose your phone</strong>. Google’s own page: <a href="https://support.google.com/accounts/answer/1187538" target="_blank" rel="noopener">Sign in with backup codes — Google Account Help</a>.</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">Where do I find mine, or make new ones?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Each service keeps them in the same place: its <strong>security settings</strong>, near the two-step verification setting itself. Sign in, open the security settings, and look for “backup codes” — you can usually see the set you were given, or make a fresh set.</p>
+        <p>One thing to know before you click: <strong>on most services, a new set replaces the old one</strong> — the old codes stop working the moment the new set is made. So make a new set only when you are ready to write the new codes down and put them somewhere safe, in the same sitting.</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">Paper? Isn’t that unsafe?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Paper in a drawer has one big strength: <strong>it cannot be hacked from the other side of the world</strong>. Nobody can phish it, sync it, or steal it with a password reset. What paper cannot survive is being lost, soaked, or thrown out by accident — so treat it like a spare house key: one copy, somewhere you would look for important papers, in a sealed envelope if you like.</p>
+        <p>The one place codes must <strong>never</strong> live alone is on the phone they protect — a photo of the codes in the phone’s own gallery is gone on exactly the night you need it. And never type them into a website or tool to “store” them — including this one. There is nowhere here to type them, on purpose.</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">It’s already happened — my phone is gone and I have no codes<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Then use the service’s own <strong>recovery door</strong> — the official “I’m locked out” path each company runs — and expect it to be slower than a code would have been. There is no support number that can hand an account over, and recovery through the official door is <strong>free</strong>: anyone who offers to unlock your account for a fee is running a scam.</p>
+        <p>Our <a href="https://ztrader88011.github.io/ZTrader88-Toolkit/tools/door-finder/" target="_blank" rel="noopener">Door-Finder</a> walks you to the right official door for Facebook, Instagram, Google, Apple, and Microsoft, problem by problem. And once you are back in, run this check and close the gaps — the next lost phone is the one you can still prepare for.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <p class="builtfrom">Built from: Google Account Help · Microsoft Support · FIDO Alliance</p>
+
+  <footer>
+    <div class="pointers">
+      <a href="https://www.youtube.com/@ztrader880" target="_blank" rel="noopener">▶ YouTube — @ztrader880</a>
+      <a href="https://gist.github.com/ztrader88011/c515828065a773ff1da85a6cc2e070a8" target="_blank" rel="noopener">📄 Our free guides</a>
+      <a href="https://www.facebook.com/ztrader88" target="_blank" rel="noopener">📘 Facebook — ztrader88</a>
+    </div>
+    <div class="freenote">
+      If you like the content like and share if you like the channel, a subscribe keeps us producing helpful content. Your support helps make sure that we're here for you in the future.
+    </div>
+    <p>ztrader88 — tech news and safety lessons in plain English. No jargon, no hype.<br>
+    The tools are free — please support us by liking, sharing, and subscribing.<br>
+    This tool collects nothing — no account, no data, ever.</p>
+  </footer>
+
+</div>
+
+<script>
+var ITEMS = [
+  {
+    id:'havecodes',
+    ask:'Do you have backup codes saved for your most important accounts — email first, then banking, then the rest?',
+    why:'When two-step verification was turned on, each service offered backup codes — one-time spare keys for the day the phone is not there. Each one works once, and Google says to create them “in case you lose your phone.” Your email comes first: it is the door every other account’s reset runs through.',
+    gapTitle:'No backup codes saved yet',
+    gapFix:'Make a set for your email account today, then banking, then the rest. Each service keeps them in its security settings, near the two-step verification setting. Write each set down by hand as you make it — never type codes into a website or tool to store them. Google’s own page explains backup codes and how they work:',
+    door:{text:'Sign in with backup codes — Google Account Help', url:'https://support.google.com/accounts/answer/1187538'}
+  },
+  {
+    id:'offphone',
+    ask:'Are those codes stored somewhere off the phone — on paper somewhere safe, or in a password manager?',
+    why:'Codes stored only on the phone — a photo in the gallery, a note in the phone — are gone exactly when you need them: the night the phone dies, is lost, or is stolen.',
+    gapTitle:'Codes live only on the phone',
+    gapFix:'Move them off the phone today. Write them on paper and keep the paper somewhere safe — a drawer, a sealed envelope — or keep them in your password manager. Paper in a drawer cannot be hacked from the other side of the world. Use the record card below to note, by hand, where each account’s codes are kept.',
+    door:null
+  },
+  {
+    id:'secondway',
+    ask:'Do you have a second way in besides codes — a passkey or authenticator app on a second device, or a signed-in tablet or computer?',
+    why:'Backup codes are one spare key. A second device that can already sign you in — a tablet, a computer, a second phone — is another, and it works even if the codes are used up or lost.',
+    gapTitle:'No second way in',
+    gapFix:'Add one while everything is working: a passkey on a second device you own, an authenticator app set up there too, or simply stay signed in on a tablet or computer at home. Synced passkeys follow your account, so a second device signed in to the same Apple Account or Google account picks them up. Our Passkey Readiness Check walks through where a passkey will work:',
+    door:{text:'Passkey Readiness Check', url:'https://ztrader88011.github.io/ZTrader88-Toolkit/tools/passkey-cross-device/'}
+  },
+  {
+    id:'authbackup',
+    ask:'Is the backup turned on in your authenticator app — Microsoft Authenticator Cloud Backup, or Google Authenticator signed in so its codes sync?',
+    why:'If your six-digit codes live in an authenticator app and its backup is off, a lost phone takes every code in the app with it — for every account at once.',
+    gapTitle:'Authenticator backup is off',
+    gapFix:'Turn it on now, while the phone is in your hand. Microsoft Authenticator: Settings → Cloud Backup (on iPhone, the backup uses your iCloud account). Google Authenticator: make sure the app is signed in to your Google Account, so its codes sync. Microsoft’s own steps:',
+    door:{text:'Back up codes in Microsoft Authenticator — Microsoft Support', url:'https://support.microsoft.com/en-us/authenticator/back-up-your-accounts-in-microsoft-authenticator'}
+  },
+  {
+    id:'findthem',
+    ask:'Could you actually find the codes tonight, in the dark, in five minutes?',
+    why:'A plan you can’t find is not a plan. The codes only help if, on the worst night, you can put your hand on them quickly — without searching the house, and without the phone they protect.',
+    gapTitle:'Codes exist — somewhere',
+    gapFix:'Fix the finding, not the codes: pick one home for them (one drawer, one envelope, one password manager), tell the person you trust where that home is, and fill in the record card below by hand so “where are the codes?” has a one-line answer for every account that matters.',
+    door:null
+  }
+];
+
+var answers = {};
+
+function recordCard(){
+  var line = '<div class="rline">Account: ______________________&nbsp;&nbsp;Codes kept at: ______________________&nbsp;&nbsp;Checked on: ____________</div>';
+  var html = '<div class="recordcard"><h4>My backup-codes record — fill in BY HAND. Never type your codes into any website or tool, including this one.</h4>';
+  for(var i = 0; i < 6; i++){ html += line; }
+  html += '</div>';
+  return html;
+}
+
+function renderChecklist(){
+  var box = document.getElementById('checklist');
+  var html = '';
+  ITEMS.forEach(function(it, i){
+    html += '<div class="checkitem" id="ci-' + it.id + '">' +
+      '<div class="ask">' + (i+1) + '. ' + it.ask + '</div>' +
+      '<div class="why">' + it.why + '</div>' +
+      '<div class="yn">' +
+        '<button type="button" data-id="' + it.id + '" data-val="yes">Yes</button>' +
+        '<button type="button" data-id="' + it.id + '" data-val="no">Not yet</button>' +
+      '</div></div>';
+  });
+  box.innerHTML = html;
+  var btns = box.querySelectorAll('button[data-id]');
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      answers[b.getAttribute('data-id')] = b.getAttribute('data-val');
+      paintItem(b.getAttribute('data-id'));
+      showResult();
+    });
+  });
+}
+
+function paintItem(id){
+  var item = document.getElementById('ci-' + id);
+  var btns = item.querySelectorAll('button[data-id]');
+  btns.forEach(function(b){
+    b.classList.remove('sel-yes'); b.classList.remove('sel-no');
+    if(answers[id] === 'yes' && b.getAttribute('data-val') === 'yes'){ b.classList.add('sel-yes'); }
+    if(answers[id] === 'no' && b.getAttribute('data-val') === 'no'){ b.classList.add('sel-no'); }
+  });
+}
+
+function showResult(){
+  var answered = Object.keys(answers).length;
+  var r = document.getElementById('result');
+  if(answered < ITEMS.length){
+    r.classList.add('hidden');
+    return;
+  }
+  var gaps = ITEMS.filter(function(it){ return answers[it.id] === 'no'; });
+  var dones = ITEMS.filter(function(it){ return answers[it.id] === 'yes'; });
+  var html = '';
+  if(gaps.length === 0){
+    html += '<h3>Your spare keys are in place — all five.</h3>' +
+      '<p>If your phone died tonight, you could still get in: codes saved, stored off the phone, a second way in, the app backed up, and you know where everything is. Two habits keep it true: run this check once a year, and re-check it whenever a phone, a number, or an important account changes.</p>';
+  } else {
+    html += '<h3>Your gap list — ' + gaps.length + ' to close</h3>' +
+      '<p>Each gap below is a five-to-thirty-minute job, done once, while everything is calm — that is the whole advantage of doing it before a crisis. The link under a gap is the company’s own page — the same page we read to build this check.</p>';
+    gaps.forEach(function(it){
+      html += '<div class="gap"><h4>' + it.gapTitle + '</h4><p>' + it.gapFix + '</p>';
+      if(it.door){
+        html += '<p><a href="' + it.door.url + '" target="_blank" rel="noopener">' + it.door.text + ' →</a></p>';
+      }
+      html += '</div>';
+    });
+    if(dones.length){
+      html += '<p><strong>Already in place:</strong></p>';
+      dones.forEach(function(it){
+        html += '<div class="done-item">✓ ' + it.ask + '</div>';
+      });
+    }
+  }
+  html += recordCard();
+  html += '<div class="actions"><button class="util" onclick="window.print()">🖨 Print my gap list + record card</button>' +
+          '<button class="util" onclick="startOver()">↺ Start over</button></div>';
+  r.innerHTML = html;
+  r.className = 'result';
+  r.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function startOver(){
+  answers = {};
+  renderChecklist();
+  document.getElementById('result').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+renderChecklist();
+
+/* "Questions people ask" accordion — one answer open at a time */
+var qaBtns = document.querySelectorAll('.qa-btn');
+qaBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var item = btn.parentElement;
+    var panel = item.querySelector('.qa-panel');
+    var wasOpen = item.classList.contains('open');
+    var openItems = document.querySelectorAll('.qa.open');
+    openItems.forEach(function(o){
+      o.classList.remove('open');
+      o.querySelector('.qa-panel').classList.add('hidden');
+      o.querySelector('.qa-btn').setAttribute('aria-expanded', 'false');
+    });
+    if(!wasOpen){
+      item.classList.add('open');
+      panel.classList.remove('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+</script>
+</body>
+</html>

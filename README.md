@@ -21,6 +21,24 @@ written for beginners: no jargon, no hype.
   Use when: you want to know how secure your sign-in really is — and the good,
   better, best steps to raise it.
   Open it here: [tools/get-secure-toolkit/index.html](tools/get-secure-toolkit/index.html)
+- **Passkey Readiness Check**
+  Use when: you're setting up a passkey and want to know it'll work on your other devices, and what happens if you lose your phone.
+  Open it here: [tools/passkey-cross-device/index.html](tools/passkey-cross-device/index.html)
+- **New Phone Day**
+  Use when: you're moving to a new phone and don't want your two-step codes stranded on the old one.
+  Open it here: [tools/new-phone-day/index.html](tools/new-phone-day/index.html)
+- **The Receipt Test**
+  Use when: you're asking who's really holding your money and how you'd know.
+  Open it here: [tools/receipt-test/index.html](tools/receipt-test/index.html)
+- **Is This Endorsement Real?**
+  Use when: a famous face is pitching an investment or product and you want the 60-second check before any money moves.
+  Open it here: [tools/endorsement-test/index.html](tools/endorsement-test/index.html)
+- **The Backup-Codes Check**
+  Use when: you want to know, before your phone dies, whether your backup codes would actually save you.
+  Open it here: [tools/backup-codes-check/index.html](tools/backup-codes-check/index.html)
+- **Code Rejected?**
+  Use when: your six-digit authenticator code says "invalid" and you want the four checks, in the order that fixes it.
+  Open it here: [tools/code-rejected/index.html](tools/code-rejected/index.html)
 - **25 Top Tips — Stop Your Agents Burning Tokens**
   Use when: your AI agent is burning through tokens or money and you want it
   stopped.

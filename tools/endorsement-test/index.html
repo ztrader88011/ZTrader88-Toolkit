@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is This Endorsement Real? — The 60-Second Famous-Face Test | ztrader88</title>
+<meta name="description" content="A famous face is pitching something — before any money moves, answer six plain questions about the ad in front of you and get a clear verdict. Free, private, nothing collected.">
+<style>
+  :root{
+    --navy:#0b1e3a; --navy2:#12294d; --gold:#d4af37; --gold-soft:#f3e3ac;
+    --paper:#fdfaf2; --ink:#1c2430; --muted:#5a6572; --warn-bg:#fdf3e3; --warn-line:#d4af37;
+    --ok:#1d6b4f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{font-size:19px;}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.55;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
+  }
+  /* Highly transparent avatar watermark — brand presence, never in the way */
+  .watermark{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .watermark span{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:78vmin; line-height:1; color:var(--navy); opacity:.045;
+    transform:rotate(-12deg); user-select:none;
+  }
+  .wrap{position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 18px 40px;}
+  header{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff; padding:30px 18px 26px; text-align:center; position:relative; z-index:1;
+    border-bottom:4px solid var(--gold);
+  }
+  .brand{
+    font-size:.78rem; letter-spacing:.32em; text-transform:uppercase; color:var(--gold);
+    font-weight:700;
+  }
+  header h1{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:2.15rem; line-height:1.15; margin:10px 0 8px;
+  }
+  header p{color:#dbe4f0; font-size:1.02rem; max-width:540px; margin:0 auto;}
+  header p.nodata{color:var(--gold-soft); font-size:.93rem; margin:12px auto 0;}
+  .frame{
+    background:var(--warn-bg); border:1px solid var(--warn-line); border-left:5px solid var(--gold);
+    border-radius:10px; padding:14px 16px; margin-top:24px; font-size:.98rem;
+  }
+  .frame strong{color:var(--navy);}
+  .step-label{
+    margin:26px 0 10px; font-size:.8rem; font-weight:700; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .step-label .n{color:var(--gold);}
+  h2.q{font-family:Georgia,serif; font-size:1.45rem; color:var(--navy); margin-bottom:14px;}
+  .checkitem{
+    background:#fff; border:2px solid #e4ddc8; border-radius:14px;
+    padding:16px; margin-bottom:12px;
+  }
+  .checkitem .ask{font-weight:700; color:var(--navy); font-size:1.05rem; margin-bottom:4px;}
+  .checkitem .why{color:var(--muted); font-size:.93rem; margin-bottom:12px;}
+  .yn{display:flex; gap:10px;}
+  .yn button{
+    flex:1; min-height:52px; border:2px solid var(--navy); border-radius:12px;
+    background:#fff; color:var(--navy); font-size:1rem; font-weight:700;
+    cursor:pointer; font-family:inherit;
+  }
+  .yn button:hover{background:var(--gold-soft);}
+  .yn button:focus{outline:3px solid var(--gold-soft); outline-offset:2px;}
+  /* On this test Yes is the worrying answer, so the selected colours swap:
+     Yes paints red (a red flag), No paints green (nothing wrong there). */
+  .yn button.sel-yes{background:#8c2f2f; border-color:#8c2f2f; color:#fff;}
+  .yn button.sel-no{background:var(--ok); border-color:var(--ok); color:#fff;}
+  .hidden{display:none !important;}
+  .result{
+    background:#fff; border:2px solid var(--navy); border-radius:16px;
+    padding:22px 20px; margin-top:6px; box-shadow:0 6px 24px rgba(11,30,58,.08);
+  }
+  .result h3{font-family:Georgia,serif; color:var(--navy); font-size:1.3rem; margin-bottom:10px;}
+  .result p{margin-bottom:10px;}
+  .gap{
+    border:1px solid #e4ddc8; border-left:5px solid #8c2f2f; border-radius:10px;
+    padding:12px 14px; margin-bottom:10px; background:#fffafa;
+  }
+  .gap h4{color:var(--navy); font-size:1rem; margin-bottom:4px;}
+  .gap p{font-size:.95rem; margin-bottom:6px;}
+  .gap a{color:var(--navy); font-weight:700;}
+  .done-item{
+    border-left:5px solid var(--ok); background:#eef4ee; border-radius:8px;
+    padding:8px 12px; margin-bottom:8px; font-size:.95rem;
+  }
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+  button.util{
+    border:2px solid var(--navy); background:#fff; color:var(--navy); border-radius:12px;
+    padding:10px 16px; font-weight:700; cursor:pointer; font-family:inherit; font-size:.95rem;
+  }
+  button.util:hover{background:var(--gold-soft);}
+  section.questions{margin-top:34px;}
+  section.questions h2{font-family:Georgia,serif; color:var(--navy); font-size:1.5rem; margin-bottom:6px;}
+  section.questions .intro{color:var(--muted); margin-bottom:14px;}
+  .qa{
+    background:#fff; border:2px solid #e4ddc8; border-radius:14px; margin-bottom:10px; overflow:hidden;
+  }
+  .qa-btn{
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:16px; font-family:inherit; font-size:1.02rem; font-weight:700; color:var(--navy);
+    position:relative; padding-right:44px;
+  }
+  .qa-btn:focus{outline:3px solid var(--gold-soft); outline-offset:-3px;}
+  .qa-btn .chev{
+    position:absolute; right:16px; top:50%; transform:translateY(-50%);
+    color:#a8851e; font-size:1.15rem; transition:transform .15s ease;
+  }
+  .qa.open .qa-btn .chev{transform:translateY(-50%) rotate(180deg);}
+  .qa-panel{padding:4px 16px 16px; border-top:1px solid #e4ddc8;}
+  .qa-panel p{margin-bottom:10px;}
+  .qa-panel p:last-child{margin-bottom:0;}
+  .qa-panel ol{margin:0 0 10px 1.25em;}
+  .qa-panel li{margin-bottom:6px;}
+  .qa-panel a{color:var(--navy); font-weight:700;}
+  p.builtfrom{margin-top:16px; font-size:.85rem; color:var(--muted); text-align:center;}
+  footer{
+    margin-top:40px; border-top:2px solid var(--gold); padding-top:18px;
+    text-align:center; color:var(--muted); font-size:.92rem;
+  }
+  footer .pointers{margin-bottom:12px; font-size:1rem;}
+  footer .pointers a{color:var(--navy); font-weight:700; text-decoration:none; margin:0 8px; white-space:nowrap;}
+  footer .pointers a:hover{text-decoration:underline;}
+  footer .freenote{
+    background:#fff; border:1px solid #e4ddc8; border-radius:12px; padding:14px 16px;
+    color:var(--ink); max-width:560px; margin:0 auto 12px;
+  }
+  @media print{
+    .watermark, .actions, .yn{display:none !important;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<div class="watermark" aria-hidden="true"><span>Z</span></div>
+
+<header>
+  <div class="brand">ztrader88</div>
+  <h1>Is This Endorsement Real?</h1>
+  <p>The 60-second famous-face test — a celebrity or well-known face is pitching something, and before any money moves, six plain questions about the ad in front of you give you a clear answer. Free from ztrader88.</p>
+  <p class="nodata">No personal information required. We don’t collect any data — nothing you answer here is stored or sent anywhere.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="frame">
+    <strong>How this test works.</strong> Think of the one ad, post, or message in front of you, and answer about <strong>that</strong> one. Every question is worded so that <strong>Yes always means a warning sign</strong> — a red flag. Two of the six are <strong>hard stops</strong>: a Yes on either one ends the test, whatever the rest say. The warning signs follow the Federal Trade Commission’s (FTC) consumer guidance on celebrity endorsement scams.
+  </div>
+
+  <p class="step-label"><span class="n">The test</span> — 6 questions</p>
+  <h2 class="q">Answer for the ad in front of you</h2>
+  <div id="checklist"></div>
+
+  <div id="result" class="hidden"></div>
+
+  <!--
+    SOURCES — every factual claim on this page is grounded in these primary
+    sources, personally verified 2026-11-11/13 (the only facts used):
+    Federal Trade Commission (FTC) consumer guidance on celebrity
+      endorsement scams — the source of the red flags in this test.
+    FTC payment guidance: no legitimate seller demands gift cards, wire
+      transfers, or cryptocurrency as the only way to pay. (The questions
+      use our house wording "digital assets"; the FTC's own wording is
+      never misquoted.)
+    Federal Bureau of Investigation (FBI), Internet Crime Complaint
+      Center (IC3), 2025 Internet Crime Report: more than 22,000
+      complaints mentioning artificial intelligence (AI), with over
+      $893 million lost; AI enables convincing synthetic content
+      (fake faces and voices).
+    FTC Rule on the Use of Consumer Reviews and Testimonials (2024):
+      bans fake celebrity testimonials.
+    NOT claimed anywhere on this page: that the law requires endorsements
+    to be labelled as ads — it does not say that, and neither do we.
+    No regulator website is linked from this page; ReportFraud.ftc.gov
+    is named in text only, per house rule.
+  -->
+  <section class="questions">
+    <h2>Questions people ask</h2>
+    <p class="intro">Tap a question — the answer opens right under it.</p>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">How do these fakes work?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>A scammer takes a face people trust — a celebrity, a presenter, a familiar expert — and puts that face on an offer the person never made. The fake turns up as a sponsored ad, a random page, or a message, usually promising easy money or a miracle product. The link leads to a look-alike site, and the payment is asked for in ways that are hard or impossible to undo.</p>
+        <p>The person in the video usually knows nothing about it. Fake celebrity testimonials are banned outright under the FTC’s 2024 Rule on the Use of Consumer Reviews and Testimonials — the fakes keep coming anyway, which is why the check has to happen on your side, before any money moves.</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">The video really looks like them — how can it be fake?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Because artificial intelligence (AI) can now build a convincing copy of a real face and voice — synthetic content that looks and sounds like the person, saying words they never said. Your eyes are no longer a reliable test, and that is exactly what the fakes count on.</p>
+        <p>The scale is not small. The Federal Bureau of Investigation’s (FBI) Internet Crime Complaint Center (IC3), in its 2025 Internet Crime Report, counted more than 22,000 complaints mentioning AI, with over $893 million lost. So do not judge by how real it looks — judge by the six signs in the test above: where it reached you, what it promises, and how it wants paying.</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">I already paid — what do I do?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Act quickly, and stay calm — there are still real steps:</p>
+        <ol>
+          <li><strong>Stop any further payments.</strong> Do not send “fees”, “taxes”, or “unlock” payments to get your money back — that is the same scam asking twice.</li>
+          <li><strong>Call your bank or the payment service</strong> and tell them it was a scam. Use the real number — the one on the back of your card, or on the company’s own website that you type in yourself. Never use a number or link from the ad.</li>
+          <li><strong>Report it to the FTC</strong> at ReportFraud.ftc.gov. Reporting is how these fakes get spotted and taken down for the next person.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">Where should I check an endorsement?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>In exactly two places, both reached by you — never through the ad:</p>
+        <ol>
+          <li><strong>The person’s real account.</strong> Go to the account you already know is theirs. If they truly endorse it, it will be there too. If it is not there, treat the ad as fake.</li>
+          <li><strong>The company’s own website or app.</strong> Type the address in yourself, or open the app you already have. If the offer is real, the company will show it on its own front door.</li>
+        </ol>
+        <p>Never check through the ad’s own link, button, or phone number — a fake ad points every one of those at the scammer, so “checking” there just asks the thief whether the theft is genuine.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <p class="builtfrom">Built from: Federal Trade Commission consumer guidance · FBI Internet Crime Complaint Center (IC3), 2025 Internet Crime Report</p>
+
+  <footer>
+    <div class="pointers">
+      <a href="https://www.youtube.com/@ztrader880" target="_blank" rel="noopener">▶ YouTube — @ztrader880</a>
+      <a href="https://gist.github.com/ztrader88011/c515828065a773ff1da85a6cc2e070a8" target="_blank" rel="noopener">📄 Our free guides</a>
+      <a href="https://www.facebook.com/ztrader88" target="_blank" rel="noopener">📘 Facebook — ztrader88</a>
+    </div>
+    <div class="freenote">
+      If you like the content like and share if you like the channel, a subscribe keeps us producing helpful content. Your support helps make sure that we're here for you in the future.
+    </div>
+    <p>ztrader88 — tech news and safety lessons in plain English. No jargon, no hype.<br>
+    The tools are free — please support us by liking, sharing, and subscribing.<br>
+    This tool collects nothing — no account, no data, ever.</p>
+  </footer>
+
+</div>
+
+<script>
+var ITEMS = [
+  {
+    id:'source',
+    ask:'Did it reach you somewhere other than the person’s real account?',
+    why:'A random page, a sponsored ad, a message, or a look-alike account — anywhere that is not the account you already know is theirs?',
+    flagTitle:'It did not come from the person’s real account',
+    flagFix:'Go to the person’s real account yourself — the one you already know is theirs. If the endorsement is not there too, treat this one as fake.'
+  },
+  {
+    id:'promise',
+    hard:true,
+    ask:'Does it promise guaranteed money, big returns, or a miracle result?',
+    why:'“Guaranteed” income, profits that cannot lose, or a product that works miracles — real offers are never allowed to promise that.',
+    flagTitle:'Guaranteed money or a miracle result — HARD STOP',
+    flagFix:'This one is a hard stop on its own: close it now. Do not pay, and do not click any further — no honest offer guarantees money.'
+  },
+  {
+    id:'rush',
+    ask:'Does it rush you?',
+    why:'A countdown ticking, “only today”, “spots running out” — pressure to decide before you have time to think or check?',
+    flagTitle:'It rushes you',
+    flagFix:'Real offers survive a night’s sleep. Walk away, and if it still interests you tomorrow, find it again through the company’s own website — typed in by you.'
+  },
+  {
+    id:'link',
+    ask:'Does the link or button take you somewhere that is NOT the company’s own known website or app?',
+    why:'Somewhere unfamiliar, a near-copy of the real name, or a page you have never seen — instead of the site or app you already know?',
+    flagTitle:'The link leaves the company’s own site',
+    flagFix:'Do not use the ad’s link. Type the company’s own website address in yourself, or open its real app — if the offer is genuine, it will be there.'
+  },
+  {
+    id:'payway',
+    hard:true,
+    ask:'Does it ask you to pay only in digital assets, gift cards, or a wire transfer?',
+    why:'No normal card, no normal checkout — only ways of paying that are hard or impossible to get back once sent?',
+    flagTitle:'Payment only in digital assets, gift cards, or a wire — HARD STOP',
+    flagFix:'This one is a hard stop on its own: the FTC’s payment guidance says no legitimate seller demands gift cards, wire transfers, or cryptocurrency as the only way to pay. Do not pay.'
+  },
+  {
+    id:'face',
+    ask:'Does the face or voice seem off?',
+    why:'Skin too smooth, odd blinking, lips not quite matching the words, or a voice that sounds like the person but not quite like them?',
+    flagTitle:'The face or voice seems off',
+    flagFix:'Trust the check, not your eyes — fake faces and voices are built to pass a quick look. Find the same endorsement on the person’s real account; if it is not there, treat it as fake.'
+  }
+];
+
+var answers = {};
+
+function renderChecklist(){
+  var box = document.getElementById('checklist');
+  var html = '';
+  ITEMS.forEach(function(it, i){
+    html += '<div class="checkitem" id="ci-' + it.id + '">' +
+      '<div class="ask">' + (i+1) + '. ' + it.ask + '</div>' +
+      '<div class="why">' + it.why + '</div>' +
+      '<div class="yn">' +
+        '<button type="button" data-id="' + it.id + '" data-val="yes">Yes</button>' +
+        '<button type="button" data-id="' + it.id + '" data-val="no">No</button>' +
+      '</div></div>';
+  });
+  box.innerHTML = html;
+  var btns = box.querySelectorAll('button[data-id]');
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      answers[b.getAttribute('data-id')] = b.getAttribute('data-val');
+      paintItem(b.getAttribute('data-id'));
+      showResult();
+    });
+  });
+}
+
+function paintItem(id){
+  var item = document.getElementById('ci-' + id);
+  var btns = item.querySelectorAll('button[data-id]');
+  btns.forEach(function(b){
+    b.classList.remove('sel-yes'); b.classList.remove('sel-no');
+    if(answers[id] === 'yes' && b.getAttribute('data-val') === 'yes'){ b.classList.add('sel-yes'); }
+    if(answers[id] === 'no' && b.getAttribute('data-val') === 'no'){ b.classList.add('sel-no'); }
+  });
+}
+
+function showResult(){
+  var answered = Object.keys(answers).length;
+  var r = document.getElementById('result');
+  if(answered < ITEMS.length){
+    r.classList.add('hidden');
+    return;
+  }
+  var flags = ITEMS.filter(function(it){ return answers[it.id] === 'yes'; });
+  var hardStop = flags.some(function(it){ return it.hard; });
+  var html = '';
+  if(hardStop){
+    html += '<h3>STOP — do not pay, do not click further</h3>' +
+      '<p>You ticked a hard stop — ' + flags.length + (flags.length === 1 ? ' red flag' : ' red flags') + ' in total. One hard stop on its own settles it, whatever the rest of the answers said. Close the ad and, if you still want the real thing, start again from the company’s own website, typed in by you.</p>';
+  } else if(flags.length === 0){
+    html += '<h3>No red flags found — still check at the person’s real account before buying anything.</h3>' +
+      '<p>You answered No to all six signs. That is a good sign, not a guarantee: run the two checks anyway — the endorsement on the person’s real account, and the offer on the company’s own site, reached by you and never through the ad.</p>';
+  } else if(flags.length <= 2){
+    html += '<h3>Slow down — verify at the person’s real account and the company’s own site before any money moves.</h3>' +
+      '<p>You ticked ' + flags.length + (flags.length === 1 ? ' red flag' : ' red flags') + '. Not enough to call it fake on sight — more than enough to stop and check before a single penny moves. Each flag you ticked is below, with its fix.</p>';
+  } else {
+    html += '<h3>Walk away — this matches the fake-endorsement pattern.</h3>' +
+      '<p>You ticked ' + flags.length + ' red flags. Real endorsements do not stack up warning signs like this — fakes do, because each sign is doing a job: building trust, creating pressure, and steering your money somewhere it cannot come back from. Each flag you ticked is below, with its fix.</p>';
+  }
+  flags.forEach(function(it){
+    html += '<div class="gap"><h4>' + it.flagTitle + '</h4><p>' + it.flagFix + '</p></div>';
+  });
+  html += '<div class="actions"><button class="util" onclick="window.print()">🖨 Print my result</button>' +
+          '<button class="util" onclick="startOver()">↺ Start over</button></div>';
+  r.innerHTML = html;
+  r.className = 'result';
+  r.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function startOver(){
+  answers = {};
+  renderChecklist();
+  document.getElementById('result').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+renderChecklist();
+
+/* "Questions people ask" accordion — one answer open at a time */
+var qaBtns = document.querySelectorAll('.qa-btn');
+qaBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var item = btn.parentElement;
+    var panel = item.querySelector('.qa-panel');
+    var wasOpen = item.classList.contains('open');
+    var openItems = document.querySelectorAll('.qa.open');
+    openItems.forEach(function(o){
+      o.classList.remove('open');
+      o.querySelector('.qa-panel').classList.add('hidden');
+      o.querySelector('.qa-btn').setAttribute('aria-expanded', 'false');
+    });
+    if(!wasOpen){
+      item.classList.add('open');
+      panel.classList.remove('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+</script>
+</body>
+</html>

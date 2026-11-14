@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code Rejected? — The 60-Second Diagnoser | ztrader88</title>
+<meta name="description" content="Your six-digit authenticator code says invalid? Walk four checks, one at a time, in the order that fixes it — the same four checks Google itself gives. Free, private, nothing collected.">
+<style>
+  :root{
+    --navy:#0b1e3a; --navy2:#12294d; --gold:#d4af37; --gold-soft:#f3e3ac;
+    --paper:#fdfaf2; --ink:#1c2430; --muted:#5a6572; --warn-bg:#fdf3e3; --warn-line:#d4af37;
+    --ok:#1d6b4f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{font-size:19px;}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--ink); line-height:1.55;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
+  }
+  /* Highly transparent avatar watermark — brand presence, never in the way */
+  .watermark{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .watermark span{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:78vmin; line-height:1; color:var(--navy); opacity:.045;
+    transform:rotate(-12deg); user-select:none;
+  }
+  .wrap{position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 18px 40px;}
+  header{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff; padding:30px 18px 26px; text-align:center; position:relative; z-index:1;
+    border-bottom:4px solid var(--gold);
+  }
+  .brand{
+    font-size:.78rem; letter-spacing:.32em; text-transform:uppercase; color:var(--gold);
+    font-weight:700;
+  }
+  header h1{
+    font-family:Georgia,"Times New Roman",serif; font-weight:700;
+    font-size:2.15rem; line-height:1.15; margin:10px 0 8px;
+  }
+  header p{color:#dbe4f0; font-size:1.02rem; max-width:540px; margin:0 auto;}
+  header p.nodata{color:var(--gold-soft); font-size:.93rem; margin:12px auto 0;}
+  .frame{
+    background:var(--warn-bg); border:1px solid var(--warn-line); border-left:5px solid var(--gold);
+    border-radius:10px; padding:14px 16px; margin-top:24px; font-size:.98rem;
+  }
+  .frame strong{color:var(--navy);}
+  .step-label{
+    margin:26px 0 10px; font-size:.8rem; font-weight:700; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .step-label .n{color:var(--gold);}
+  h2.q{font-family:Georgia,serif; font-size:1.45rem; color:var(--navy); margin-bottom:14px;}
+  .checkitem{
+    background:#fff; border:2px solid #e4ddc8; border-radius:14px;
+    padding:16px; margin-bottom:12px;
+  }
+  .checkitem .ask{font-weight:700; color:var(--navy); font-size:1.05rem; margin-bottom:4px;}
+  .checkitem .why{color:var(--muted); font-size:.93rem; margin-bottom:12px;}
+  .checkitem p.body{margin-bottom:12px;}
+  .checkitem p.body:last-of-type{margin-bottom:16px;}
+  .yn{display:flex; gap:10px;}
+  .yn button{
+    flex:1; min-height:52px; border:2px solid var(--navy); border-radius:12px;
+    background:#fff; color:var(--navy); font-size:1rem; font-weight:700;
+    cursor:pointer; font-family:inherit;
+  }
+  .yn button:hover{background:var(--gold-soft);}
+  .yn button:focus{outline:3px solid var(--gold-soft); outline-offset:2px;}
+  .yn button.sel-yes{background:var(--ok); border-color:var(--ok); color:#fff;}
+  .yn button.sel-no{background:#8c2f2f; border-color:#8c2f2f; color:#fff;}
+  .hidden{display:none !important;}
+  .result{
+    background:#fff; border:2px solid var(--navy); border-radius:16px;
+    padding:22px 20px; margin-top:6px; box-shadow:0 6px 24px rgba(11,30,58,.08);
+  }
+  .result h3{font-family:Georgia,serif; color:var(--navy); font-size:1.3rem; margin-bottom:10px;}
+  .result p{margin-bottom:10px;}
+  .result a{color:var(--navy); font-weight:700;}
+  .gap{
+    border:1px solid #e4ddc8; border-left:5px solid #8c2f2f; border-radius:10px;
+    padding:12px 14px; margin-bottom:10px; background:#fffafa;
+  }
+  .gap h4{color:var(--navy); font-size:1rem; margin-bottom:4px;}
+  .gap p{font-size:.95rem; margin-bottom:6px;}
+  .gap a{color:var(--navy); font-weight:700;}
+  .done-item{
+    border-left:5px solid var(--ok); background:#eef4ee; border-radius:8px;
+    padding:8px 12px; margin-bottom:8px; font-size:.95rem;
+  }
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+  button.util{
+    border:2px solid var(--navy); background:#fff; color:var(--navy); border-radius:12px;
+    padding:10px 16px; font-weight:700; cursor:pointer; font-family:inherit; font-size:.95rem;
+  }
+  button.util:hover{background:var(--gold-soft);}
+  section.questions{margin-top:34px;}
+  section.questions h2{font-family:Georgia,serif; color:var(--navy); font-size:1.5rem; margin-bottom:6px;}
+  section.questions .intro{color:var(--muted); margin-bottom:14px;}
+  .qa{
+    background:#fff; border:2px solid #e4ddc8; border-radius:14px; margin-bottom:10px; overflow:hidden;
+  }
+  .qa-btn{
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:16px; font-family:inherit; font-size:1.02rem; font-weight:700; color:var(--navy);
+    position:relative; padding-right:44px;
+  }
+  .qa-btn:focus{outline:3px solid var(--gold-soft); outline-offset:-3px;}
+  .qa-btn .chev{
+    position:absolute; right:16px; top:50%; transform:translateY(-50%);
+    color:#a8851e; font-size:1.15rem; transition:transform .15s ease;
+  }
+  .qa.open .qa-btn .chev{transform:translateY(-50%) rotate(180deg);}
+  .qa-panel{padding:4px 16px 16px; border-top:1px solid #e4ddc8;}
+  .qa-panel p{margin-bottom:10px;}
+  .qa-panel p:last-child{margin-bottom:0;}
+  .qa-panel ol{margin:0 0 10px 1.25em;}
+  .qa-panel li{margin-bottom:6px;}
+  .qa-panel a{color:var(--navy); font-weight:700;}
+  p.builtfrom{margin-top:16px; font-size:.85rem; color:var(--muted); text-align:center;}
+  footer{
+    margin-top:40px; border-top:2px solid var(--gold); padding-top:18px;
+    text-align:center; color:var(--muted); font-size:.92rem;
+  }
+  footer .pointers{margin-bottom:12px; font-size:1rem;}
+  footer .pointers a{color:var(--navy); font-weight:700; text-decoration:none; margin:0 8px; white-space:nowrap;}
+  footer .pointers a:hover{text-decoration:underline;}
+  footer .freenote{
+    background:#fff; border:1px solid #e4ddc8; border-radius:12px; padding:14px 16px;
+    color:var(--ink); max-width:560px; margin:0 auto 12px;
+  }
+  @media print{
+    .watermark, .actions, .yn{display:none !important;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<div class="watermark" aria-hidden="true"><span>Z</span></div>
+
+<header>
+  <div class="brand">ztrader88</div>
+  <h1>Code Rejected?</h1>
+  <p>Your six-digit code says invalid — four checks, in the order that fixes it. The same four checks Google itself gives.</p>
+  <p class="nodata">No personal information required. We don’t collect any data — nothing you answer here is stored or sent anywhere.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="frame">
+    <strong>How this works:</strong> one check at a time. Do the check, type the code again, and tap the button that matches what happened. Most rejected codes are fixed by the first check or two — and if all four fail, the last card shows your other ways in. The whole walk takes about a minute.
+  </div>
+
+  <div id="stage"></div>
+
+  <!--
+    SOURCES — every factual claim, check, and step on this page is grounded in
+    these primary sources, read in full by Jozie (November 13, 2026):
+    Google Account Help, "Get verification codes with Google Authenticator"
+      — https://support.google.com/accounts/answer/1066447
+      The four checks in the stepper are the "Fix an incorrect code" section of
+      that page, in Google's own order:
+        1. Enter the code before it expires.
+        2. Use the code for the correct app or service.
+        3. Use the code for the correct account.
+        4. "The time on your device is synced and correct for your local time zone."
+      The same page notes that Google Authenticator version 7.0 and up uses the
+      time setting from your device — which is why check 4 sends you to the
+      phone's automatic date & time setting.
+    Google Account Help, "Sign in with backup codes"
+      — https://support.google.com/accounts/answer/1187538
+      Backup codes: a set you can download and print; each code works once.
+    The recovery-door link is our own Door-Finder tool:
+      https://ztrader88011.github.io/ZTrader88-Toolkit/tools/door-finder/
+  -->
+  <section class="questions">
+    <h2>Questions people ask</h2>
+    <p class="intro">Tap a question — the answer opens right under it.</p>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">Why do codes change every 30 seconds?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Because the code is a <strong>one-time</strong> code: it is only good for a short window, then a fresh one replaces it. Your app and the service are both working from the same changing sequence, so they agree on which code is live right now — no code ever travels between them in advance.</p>
+        <p>That short life is the protection. A code someone steals — glimpsed over a shoulder, pulled from an old screenshot — quickly becomes useless, because by the time they try it, the window has closed. It is also the most common reason a correct-looking code gets rejected: you typed the right digits, just a few seconds too late.</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">My phone clock was right, but it still fails — now what?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p>Go back to the top and work through the four checks again, in order, slowly. The two that catch people most are the ones that look right at a glance: the code came from the row for a different account on the same service, or it rolled over while it was being typed. A fresh code, from the right row, typed promptly, settles most of what is left.</p>
+        <p>If it still fails, stop troubleshooting the code and use another way in — backup codes, a passkey, or the service’s recovery door on the last card of the diagnoser above. And one warning while you work: <strong>do not delete the account’s row in the authenticator app.</strong> Deleting the row can remove your only way in, and no support line can put it back.</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <button class="qa-btn" aria-expanded="false">Someone called me asking for my code. What do I do?<span class="chev" aria-hidden="true">▾</span></button>
+      <div class="qa-panel hidden">
+        <p><strong>Never read the code out. Hang up.</strong> No real company calls or texts to ask for your six-digit code — not your bank, not Google, not Microsoft, not anyone. That call is a break-in in progress: the caller already has your password and is stuck at the one door only you can open, and the code is the key.</p>
+        <p>If the call worried you — it claimed a charge, a lockout, a problem with your account — do not use any number or link the caller gave you. Open the service’s real app, or type in its real site address yourself, and check there. If everything looks normal, it was: the call was the whole attack.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <p class="builtfrom">Built from: Google Account Help</p>
+
+  <footer>
+    <div class="pointers">
+      <a href="https://www.youtube.com/@ztrader880" target="_blank" rel="noopener">▶ YouTube — @ztrader880</a>
+      <a href="https://gist.github.com/ztrader88011/c515828065a773ff1da85a6cc2e070a8" target="_blank" rel="noopener">📄 Our free guides</a>
+      <a href="https://www.facebook.com/ztrader88" target="_blank" rel="noopener">📘 Facebook — ztrader88</a>
+    </div>
+    <div class="freenote">
+      If you like the content like and share if you like the channel, a subscribe keeps us producing helpful content. Your support helps make sure that we're here for you in the future.
+    </div>
+    <p>ztrader88 — tech news and safety lessons in plain English. No jargon, no hype.<br>
+    The tools are free — please support us by liking, sharing, and subscribing.<br>
+    This tool collects nothing — no account, no data, ever.</p>
+  </footer>
+
+</div>
+
+<script>
+var CHECKS = [
+  {
+    title:'Did you type the code before it expired?',
+    body:[
+      'The codes in your authenticator app roll over every 30 seconds — a new code replaces the old one whether you used it or not. A code typed near the end of its 30 seconds can expire before the service checks it, and it comes back "invalid" even though every digit was right.',
+      '<strong>Try this:</strong> watch the app and wait for a fresh code to appear. The moment it does, type it in promptly and submit it — give yourself the full window, not the last few seconds of the old one.'
+    ],
+    fixedNote:'That was the expiry window — the most common cause there is. Nothing was wrong with your account; the code simply aged out before it landed. Anytime a code is rejected again, a fresh one, typed promptly, is the first thing to try.'
+  },
+  {
+    title:'Is it the code for the correct app or service?',
+    body:[
+      'Your authenticator app holds many codes at once — one row for each service you added. The rows all look alike: six digits, a name underneath. A code from the wrong row is a real code, just for somewhere else, and the service you are signing in to will reject it every time.',
+      '<strong>Try this:</strong> look at the name written under the code in the app and match it to the site or app asking you to sign in. Then type that row’s code.'
+    ],
+    fixedNote:'Wrong row — an easy mistake with a screen full of look-alike codes. The name under the code is the part to check; the digits alone tell you nothing.'
+  },
+  {
+    title:'Is it the code for the correct account?',
+    body:[
+      'If you have more than one account on the same service — say, two accounts at one site — the app holds a separate row for each one, often with the same service name and only the account name below it differing. The code for your other account will be rejected by this one.',
+      '<strong>Try this:</strong> read the full line under the code, account name included, and pick the row for the exact account you are signing in to.'
+    ],
+    fixedNote:'Right service, wrong account — the two rows sit side by side in the app. Reading the whole line under the code, not just the service name, is the habit that prevents it.'
+  },
+  {
+    title:'Is the time on your device synced and correct?',
+    body:[
+      'These codes are built from the time. Your app and the service each work out what the code should be right now — so if your phone’s clock is off, even by a minute, the two sides disagree and every code is rejected. Google puts it this way: "The time on your device is synced and correct for your local time zone."',
+      '<strong>Try this:</strong> open your phone’s Settings, find <strong>Date &amp; time</strong>, and turn on the automatic setting (worded like "Set time automatically") so the phone keeps its own clock right. Google Authenticator 7.0 and later uses the phone’s own time setting directly — a wrong phone clock means wrong codes. Then try a fresh code.'
+    ],
+    fixedNote:'It was the clock. Leave the automatic date &amp; time setting on — it is what keeps your phone and the service agreeing on what the code should be, and turning it off is how this problem comes back.'
+  }
+];
+
+var stage = document.getElementById('stage');
+
+function renderCheck(i){
+  var c = CHECKS[i];
+  var html = '<p class="step-label"><span class="n">Check ' + (i+1) + '</span> of 4</p>' +
+    '<h2 class="q">' + c.title + '</h2>' +
+    '<div class="checkitem">';
+  c.body.forEach(function(p){ html += '<p class="body">' + p + '</p>'; });
+  html += '<div class="yn">' +
+      '<button type="button" id="btnFixed">That fixed it</button>' +
+      '<button type="button" id="btnStill">Still rejected</button>' +
+    '</div></div>';
+  stage.innerHTML = html;
+  document.getElementById('btnFixed').addEventListener('click', function(){ renderFixed(i); });
+  document.getElementById('btnStill').addEventListener('click', function(){
+    if(i + 1 < CHECKS.length){ renderCheck(i + 1); }
+    else { renderFinal(); }
+  });
+  stage.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function renderFixed(i){
+  var html = '<p class="step-label"><span class="n">Done</span> — fixed at check ' + (i+1) + '</p>' +
+    '<div class="result"><h3>✓ You’re in.</h3>' +
+    '<p>' + CHECKS[i].fixedNote + '</p>' +
+    '<div class="actions"><button class="util" onclick="startOver()">↺ Run the diagnoser again</button></div></div>';
+  stage.innerHTML = html;
+  stage.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function renderFinal(){
+  var html = '<p class="step-label"><span class="n">All four checks</span> — still rejected</p>' +
+    '<div class="result"><h3>Stop guessing — use another way in.</h3>' +
+    '<p>Four failed checks usually means the problem is not the code you are typing — it is the code itself, and more attempts will not fix it. Use a way in you already set up:</p>' +
+    '<div class="gap"><h4>Backup codes</h4>' +
+    '<p>When two-step verification was set up, the service offered backup codes — a set you could download or print. Each code works once. If yours are saved somewhere safe, sign in with one now. Google’s own page: <a href="https://support.google.com/accounts/answer/1187538" target="_blank" rel="noopener">Sign in with backup codes — Google Account Help</a>.</p></div>' +
+    '<div class="gap"><h4>A passkey</h4>' +
+    '<p>If you set up a passkey on this account, look for "Use a passkey" or "Try another way" on the sign-in screen — it signs you in with your face, fingerprint, or PIN, no code needed.</p></div>' +
+    '<div class="gap"><h4>The service’s own recovery door</h4>' +
+    '<p>Every big service has one official recovery door, and it is the only door there is. Our Door-Finder walks you to the right one for Facebook, Instagram, Google, Apple, and Microsoft: <a href="https://ztrader88011.github.io/ZTrader88-Toolkit/tools/door-finder/" target="_blank" rel="noopener">Door-Finder — find your recovery door</a>.</p></div>' +
+    '<p><strong>One warning that never changes:</strong> never read a code to anyone who calls or texts asking for it. No real company asks — that call is a break-in in progress, and the code is the key they are missing.</p>' +
+    '<div class="actions"><button class="util" onclick="startOver()">↺ Start over</button></div></div>';
+  stage.innerHTML = html;
+  stage.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function startOver(){
+  renderCheck(0);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+renderCheck(0);
+
+/* "Questions people ask" accordion — one answer open at a time */
+var qaBtns = document.querySelectorAll('.qa-btn');
+qaBtns.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var item = btn.parentElement;
+    var panel = item.querySelector('.qa-panel');
+    var wasOpen = item.classList.contains('open');
+    var openItems = document.querySelectorAll('.qa.open');
+    openItems.forEach(function(o){
+      o.classList.remove('open');
+      o.querySelector('.qa-panel').classList.add('hidden');
+      o.querySelector('.qa-btn').setAttribute('aria-expanded', 'false');
+    });
+    if(!wasOpen){
+      item.classList.add('open');
+      panel.classList.remove('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+</script>
+</body>
+</html>
